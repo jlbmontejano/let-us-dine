@@ -14,7 +14,7 @@ import { useToast } from "@/hooks/use-toast";
 import { questionsSchema } from "@/lib/zod-validation";
 import { FetchResponse } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { z } from "zod";
@@ -27,6 +27,21 @@ const Questions = () => {
 	const [selectedAnswers, setSelectedAnswers] = useState<
 		Record<number, string>
 	>({});
+	const [userLocation, setUserLocation] = useState<GeolocationCoordinates>();
+
+	useEffect(() => {
+		if ("geolocation" in navigator) {
+			navigator.geolocation.getCurrentPosition(
+				position => {
+					setUserLocation(position.coords);
+				},
+				// On error
+				err => {
+					console.log(err);
+				}
+			);
+		}
+	}, []);
 
 	// 1. Define your form.
 	const form = useForm<z.infer<typeof questionsSchema>>({
@@ -40,12 +55,13 @@ const Questions = () => {
 				`${import.meta.env.VITE_API_URL}/sessions/${sessionId}`,
 				{
 					method: "POST",
-					body: JSON.stringify(values),
+					body: JSON.stringify({ questionnaireData: values, userLocation }),
 					headers: {
 						"Content-Type": "application/json",
 					},
 				}
 			);
+
 			const { success, message }: FetchResponse = await response.json();
 
 			if (success) {

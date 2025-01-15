@@ -3,9 +3,11 @@ import { v4 as uuidv4 } from "uuid";
 import prisma from "../../prisma/prismaClient";
 import asyncHandler from "../middleware/asyncHandler";
 import {
-	formatRequestBody,
+	createResultAndUpdate,
+	formatQuestionnaireData,
 	isSessionActive,
 } from "../services/session.services";
+import { PostSessionResultBody } from "../types";
 
 //@desc    Create a new session
 //@route   POST /sessions
@@ -61,57 +63,22 @@ export const createSessionResults = asyncHandler(
 			});
 		}
 
+		const { questionnaireData, userLocation } =
+			req.body as PostSessionResultBody;
+
+		const { latitude: userLatitude = null, longitude: userLongitude = null } =
+			userLocation ?? {};
+
 		// Clean data to make sure we can create multiple results
-		const formattedData = formatRequestBody(req.body);
+		const formattedResults = formatQuestionnaireData(questionnaireData);
 
-		const resultPromises = formattedData.map(item => {
-			return prisma.results.create({
-				data: {
-					session: {
-						connect: { uuid: sessionId },
-					},
-					question: {
-						connect: { text: item.questions },
-					},
-					answer: {
-						connect: {
-							questionText_text: {
-								questionText: item.questions,
-								text: item.answers,
-							},
-						},
-					},
-				},
-			});
-		});
-
-		// Wait for all the result creations to complete
-		const results = await Promise.all(resultPromises);
-
-		// Increment currentParticipants by 1
-		const { currentParticipants, totalParticipants } =
-			await prisma.sessions.update({
-				where: { uuid: sessionId },
-				data: {
-					currentParticipants: {
-						increment: 1,
-					},
-				},
-				select: {
-					currentParticipants: true,
-					totalParticipants: true,
-				},
-			});
-
-		// Flag as inactive if needed
-		if (currentParticipants >= totalParticipants) {
-			await prisma.sessions.update({
-				where: { uuid: sessionId },
-				data: {
-					isActive: false,
-				},
-			});
-		}
+		// Make a transaction for make sure everything success or everything fails
+		await createResultAndUpdate(
+			sessionId,
+			formattedResults,
+			userLatitude,
+			userLongitude
+		);
 
 		return res.status(200).json({
 			success: true,
@@ -136,6 +103,8 @@ export const getSession = asyncHandler(
 				currentParticipants: true,
 				totalParticipants: true,
 				isActive: true,
+				averageLatitude: true,
+				averageLongitude: true,
 			},
 		});
 
@@ -193,14 +162,14 @@ export const getSessionResults = asyncHandler(
 			});
 		}
 
-		const response = await prisma.$queryRaw`
+		const questionsResults = await prisma.$queryRaw`
 		WITH AnswerCounts AS 
 		(
 		  SELECT
 			a."text",
 			a."questionText",
 			r."questionId",
-			CAST(COUNT(*) AS INTEGER) AS vote_count
+			CAST(COUNT(*) AS INTEGER) AS "voteCount"
 		  FROM
 			"Results" r
 			JOIN "Questions" q ON q."id" = r."questionId"
@@ -216,7 +185,7 @@ export const getSessionResults = asyncHandler(
 		MaxCounts AS (
 		  SELECT
 			"questionId",
-			MAX(vote_count) AS max_vote_count
+			MAX("voteCount") AS max_voteCount
 		  FROM
 			AnswerCounts
 		  GROUP BY
@@ -227,23 +196,39 @@ export const getSessionResults = asyncHandler(
 			ac."text",
 			ac."questionText",
 		  	ac."questionId",
-		 	ac.vote_count
+		 	ac."voteCount"
 		FROM
 		 	AnswerCounts ac
 		JOIN
 		  	MaxCounts mc
 		ON
-		  	ac."questionId" = mc."questionId" AND ac.vote_count = mc.max_vote_count
+		  	ac."questionId" = mc."questionId" AND ac."voteCount" = mc.max_voteCount
 		ORDER BY
 		  	ac."questionId";
 	  `;
 
-		if (!response) {
+		if (!questionsResults) {
 			return res
 				.status(404)
 				.json({ success: false, message: "Results not found." });
 		}
 
-		return res.status(200).json({ success: true, data: response });
+		const { averageLatitude, averageLongitude } =
+			await prisma.sessions.findFirstOrThrow({
+				where: { uuid: sessionId },
+				select: {
+					averageLatitude: true,
+					averageLongitude: true,
+				},
+			});
+
+		return res.status(200).json({
+			success: true,
+			data: {
+				questionsResults,
+				averageLatitude: averageLatitude ?? null,
+				averageLongitude: averageLongitude ?? null,
+			},
+		});
 	}
 );
