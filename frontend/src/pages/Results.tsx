@@ -66,7 +66,7 @@ const Results = () => {
 
 	return (
 		<div className='page-padding'>
-			<Button onClick={() => navigate("/setup")}>Back to Main Menu</Button>
+			<Button onClick={() => navigate("/")}>Back to Main Menu</Button>
 			{sessionCompleted ? (
 				<div className='flex flex-col mt-6 gap-4'>
 					<p className='text-4xl text-center '>The results are:</p>
