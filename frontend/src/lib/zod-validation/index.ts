@@ -9,11 +9,11 @@ export const createSessionSchema = z.object({
 });
 
 export const joinSessionSchema = z.object({
-	sessionId: z.string(),
+	sessionId: z.string().min(1, { message: "A session ID is required." }),
 });
 
 export const checkSessionSchema = z.object({
-	sessionId: z.string(),
+	sessionId: z.string().min(1, { message: "A session ID is required." }),
 });
 
 export const questionsSchema = z.object(
