@@ -1,7 +1,7 @@
 import ShareId from "@/components/shared/ShareId";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { SessionData, SessionStatus } from "@/types";
+import { QuestionResult, SessionResults, SessionStatus } from "@/types";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -15,7 +15,7 @@ const Results = () => {
 		currentParticipants: 0,
 		totalParticipants: 0,
 	});
-	const [sessionData, setSessionData] = useState<SessionData>();
+	const [sessionData, setSessionData] = useState<SessionResults>();
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -41,6 +41,7 @@ const Results = () => {
 
 				if (success) {
 					setSessionData(data);
+					console.log(data);
 				} else {
 					setSessionStatus(data);
 				}
@@ -65,26 +66,28 @@ const Results = () => {
 
 	return (
 		<div className='page-padding'>
-			<Button onClick={() => navigate("/setup")}>Back to Main Menu</Button>
+			<Button onClick={() => navigate("/")}>Back to Main Menu</Button>
 			{sessionCompleted ? (
 				<div className='flex flex-col mt-6 gap-4'>
 					<p className='text-4xl text-center '>The results are:</p>
-					{sessionData?.map(result => (
-						<div key={result.questionId}>
-							<p>
-								<span className='font-semibold'>Question: </span>
-								{result.questionText}
-							</p>
-							<p>
-								<span className='font-semibold'>Most Voted Answer: </span>
-								{result.text}
-							</p>
-							<p>
-								<span className='font-semibold'>Total Votes: </span>
-								{result.vote_count}
-							</p>
-						</div>
-					))}
+					{sessionData?.questionsResults.map(
+						({ text, questionId, questionText, voteCount }: QuestionResult) => (
+							<div key={`${questionId}/${text}/${voteCount}`}>
+								<p>
+									<span className='font-semibold'>Question: </span>
+									{questionText}
+								</p>
+								<p>
+									<span className='font-semibold'>Most Voted Answer: </span>
+									{text}
+								</p>
+								<p>
+									<span className='font-semibold'>Total Votes: </span>
+									{voteCount}
+								</p>
+							</div>
+						)
+					)}
 				</div>
 			) : (
 				<div className='flex flex-col mt-6 gap-4 mx-auto w-[80%]'>

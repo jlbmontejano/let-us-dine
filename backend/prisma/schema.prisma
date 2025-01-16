@@ -16,6 +16,8 @@ model Sessions {
   currentParticipants Int
   totalParticipants   Int
   results             Results[]
+  averageLatitude     Float?
+  averageLongitude    Float?
 }
 
 model Questions {

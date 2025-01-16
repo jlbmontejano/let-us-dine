@@ -11,12 +11,18 @@ export type GetSession = {
 	isActive: boolean;
 };
 
-export type SessionData = {
+export type SessionResults = {
+	averageLatitude: number | null;
+	averageLongitude: number | null;
+	questionsResults: QuestionResult[];
+};
+
+export type QuestionResult = {
 	text: string;
 	questionId: string;
 	questionText: string;
-	vote_count: number;
-}[];
+	voteCount: number;
+};
 
 export type SessionStatus = {
 	isActive: boolean;
