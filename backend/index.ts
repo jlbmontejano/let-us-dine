@@ -1,3 +1,6 @@
+import { configDotenv } from "dotenv";
+configDotenv();
+
 import prisma from "./prisma/prismaClient";
 import app from "./src/app";
 
