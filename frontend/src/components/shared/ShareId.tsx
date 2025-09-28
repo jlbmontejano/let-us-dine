@@ -1,5 +1,5 @@
-import { Label } from "../ui/label";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 
 type ShareIdProps = {
@@ -13,20 +13,20 @@ const ShareId = ({ sessionId }: ShareIdProps) => {
 		try {
 			await navigator.clipboard.writeText(sessionId);
 			toast({
-				description: "The ID has been successfully copied to your clipboard.",
+				description: "ID copied to your clipboard.",
 			});
 		} catch (error) {
 			toast({
 				description: "An error has ocurred. Please try again.",
 				variant: "destructive",
 			});
-			console.error(`Error: ${error}`);
+			console.error(error);
 		}
 	};
 
 	return (
 		<>
-			<Label>Remember to share your ID:</Label>
+			<Label>Remember to share the session ID:</Label>
 			<Button onClick={handleCopyId}>{sessionId}</Button>
 		</>
 	);
