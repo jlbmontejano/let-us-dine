@@ -1,68 +1,35 @@
 import { NextFunction, Request, Response } from "express";
-import prisma from "../../prisma/prismaClient";
 import asyncHandler from "../middleware/asyncHandler";
+import * as ResultServices from "../services/result.services";
+import { FindResultInfo } from "../types";
+import ErrorResponse from "../utils/errorResponse";
 
 //@desc    Get a specific result
-//@route   GET /results/:resultId
-//@access  Public
+//@route   GET /results/:id
+//@access  Admin
 export const getResult = asyncHandler(
 	async (req: Request, res: Response, next: NextFunction) => {
-		const { resultId } = req.params;
+		const { id } = req.params;
 
-		const response = await prisma.results.findFirst({
-			where: {
-				id: Number(resultId),
-			},
-			select: {
-				id: true,
-				session: {
-					select: {
-						uuid: true,
-					},
-				},
-				answer: {
-					select: {
-						questionText: true,
-						text: true,
-					},
-				},
-			},
-		});
+		const result: FindResultInfo | null = await ResultServices.findById(id);
 
-		if (!response) {
-			return res
-				.status(404)
-				.json({ success: false, message: "Result not found." });
+		if (!result) {
+			throw new ErrorResponse("Result not found.", 404);
 		}
 
-		return res.status(200).json({ success: true, data: response });
+		return res.status(200).json({ success: true, data: result });
 	}
 );
 
 //@desc    Get all results
 //@route   GET /results
-//@access  Public
+//@access  Admin
 export const getResults = asyncHandler(
 	async (req: Request, res: Response, next: NextFunction) => {
-		const response = await prisma.results.findMany({
-			select: {
-				id: true,
-				session: {
-					select: {
-						uuid: true,
-					},
-				},
-				answer: {
-					select: {
-						questionText: true,
-						text: true,
-					},
-				},
-			},
-		});
+		const results: FindResultInfo[] = await ResultServices.findAll();
 
 		return res
 			.status(200)
-			.json({ success: true, count: response.length, data: response });
+			.json({ success: true, data: results, count: results.length });
 	}
 );

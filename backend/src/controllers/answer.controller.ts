@@ -1,32 +1,23 @@
 import { NextFunction, Request, Response } from "express";
-import prisma from "../../prisma/prismaClient";
 import asyncHandler from "../middleware/asyncHandler";
+import * as AnswerServices from "../services/answer.services";
+import { FindAnswerInfo } from "../types";
+import ErrorResponse from "../utils/errorResponse";
 
 //@desc    Get a specific answer
-//@route   GET /answers/:answerId
+//@route   GET /answers/:id
 //@access  Public
 export const getAnswer = asyncHandler(
 	async (req: Request, res: Response, next: NextFunction) => {
-		const { answerId } = req.params;
+		const { id } = req.params;
 
-		const response = await prisma.answers.findFirst({
-			where: {
-				id: Number(answerId),
-			},
-			select: {
-				id: true,
-				text: true,
-				question: { select: { id: true, text: true } },
-			},
-		});
+		const answer: FindAnswerInfo | null = await AnswerServices.findById(id);
 
-		if (!response) {
-			return res
-				.status(404)
-				.json({ success: false, message: "Answer not found." });
+		if (!answer) {
+			throw new ErrorResponse("Answer not found.", 404);
 		}
 
-		return res.status(200).json({ success: true, data: response });
+		return res.status(200).json({ success: true, data: answer });
 	}
 );
 
@@ -35,16 +26,10 @@ export const getAnswer = asyncHandler(
 //@access  Public
 export const getAnswers = asyncHandler(
 	async (req: Request, res: Response, next: NextFunction) => {
-		const response = await prisma.answers.findMany({
-			select: {
-				id: true,
-				text: true,
-				question: { select: { id: true, text: true } },
-			},
-		});
+		const answers: FindAnswerInfo[] = await AnswerServices.findAll();
 
 		return res
 			.status(200)
-			.json({ success: true, count: response.length, data: response });
+			.json({ success: true, data: answers, count: answers.length });
 	}
 );

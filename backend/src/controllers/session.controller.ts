@@ -1,234 +1,142 @@
 import { NextFunction, Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
-import prisma from "../../prisma/prismaClient";
+import { CreateSessionResultBody } from "../../../shared/types/index";
 import asyncHandler from "../middleware/asyncHandler";
-import {
-	createResultAndUpdate,
-	formatQuestionnaireData,
-	isSessionActive,
-} from "../services/session.services";
-import { PostSessionResultBody } from "../types";
+import * as SessionServices from "../services/session.services";
+import { CreateSessionInfo, FindSessionInfo } from "../types";
+import ErrorResponse from "../utils/errorResponse";
+import { createSessionSchema } from "../utils/zod-validation/schemas";
 
 //@desc    Create a new session
 //@route   POST /sessions
 //@access  Public
 export const createSession = asyncHandler(
 	async (req: Request, res: Response, next: NextFunction) => {
-		const { totalParticipants } = req.body;
+		const dataValidation = createSessionSchema.safeParse(req.body);
 
-		const uuid = uuidv4();
-
-		const response = await prisma.sessions.create({
-			data: { uuid, currentParticipants: 0, totalParticipants },
-			select: { uuid: true },
-		});
-
-		if (!response) {
-			res.status(400).json({
-				success: false,
-				message: "Error creating session.",
-			});
-		}
-
-		console.log(response);
-
-		return res.status(200).json({
-			success: true,
-			data: response,
-		});
-	}
-);
-
-//@desc    Create session results
-//@route   POST /sessions/:sessionId
-//@access  Public
-export const createSessionResults = asyncHandler(
-	async (req: Request, res: Response, next: NextFunction) => {
-		const { sessionId } = req.params;
-
-		// Check that the session is still active
-		const sessionStatus = await isSessionActive(sessionId);
-
-		if (!sessionStatus) {
-			return res.status(404).json({
-				success: false,
-				message: "Session not found.",
-			});
-		}
-
-		if (!sessionStatus.isActive) {
+		if (!dataValidation.success) {
 			return res.status(400).json({
 				success: false,
-				message: "This session is already inactive.",
+				message: "Data validation failed.",
 			});
 		}
 
-		const { questionnaireData, userLocation } =
-			req.body as PostSessionResultBody;
+		const { totalParticipants } = dataValidation.data;
 
-		const { latitude: userLatitude = null, longitude: userLongitude = null } =
-			userLocation ?? {};
+		try {
+			const uuid = uuidv4();
 
-		// Clean data to make sure we can create multiple results
-		const formattedResults = formatQuestionnaireData(questionnaireData);
+			const session: CreateSessionInfo = await SessionServices.create(
+				uuid,
+				totalParticipants
+			);
 
-		// Make a transaction for make sure everything success or everything fails
-		await createResultAndUpdate(
-			sessionId,
-			formattedResults,
-			userLatitude,
-			userLongitude
-		);
-
-		return res.status(200).json({
-			success: true,
-			message: "Your results have been added to the session.",
-		});
+			return res.status(200).json({
+				success: true,
+				data: session,
+			});
+		} catch (error) {
+			console.log(error);
+			return res
+				.status(500)
+				.json({ success: false, message: "Internal error." });
+		}
 	}
 );
 
 //@desc    Get a specific session
-//@route   GET /sessions/:sessionId
+//@route   GET /sessions/:id
 //@access  Public
 export const getSession = asyncHandler(
 	async (req: Request, res: Response, next: NextFunction) => {
-		const { sessionId } = req.params;
+		const { id } = req.params;
 
-		const response = await prisma.sessions.findFirst({
-			where: {
-				uuid: sessionId,
-			},
-			select: {
-				uuid: true,
-				currentParticipants: true,
-				totalParticipants: true,
-				isActive: true,
-				averageLatitude: true,
-				averageLongitude: true,
-			},
-		});
+		const session: FindSessionInfo | null = await SessionServices.findById(
+			id
+		);
 
-		if (!response) {
-			return res
-				.status(404)
-				.json({ success: false, message: "Session not found." });
+		if (!session) {
+			throw new ErrorResponse("Session not found.", 404);
 		}
 
-		return res.status(200).json({ success: true, data: response });
+		return res.status(200).json({ success: true, data: session });
 	}
 );
 
 //@desc    Get all sessions
 //@route   GET /sessions
-//@access  Public
+//@access  Admin
 export const getSessions = asyncHandler(
 	async (req: Request, res: Response, next: NextFunction) => {
-		const response = await prisma.sessions.findMany({
-			select: {
-				uuid: true,
-				currentParticipants: true,
-				totalParticipants: true,
-				isActive: true,
-			},
-		});
+		const sessions: FindSessionInfo[] = await SessionServices.findAll();
 
 		return res
 			.status(200)
-			.json({ success: true, count: response.length, data: response });
+			.json({ success: true, data: sessions, count: sessions.length });
 	}
 );
 
-//@desc    Get a session's result
-//@route   GET /sessions/:sessionId/results
+//@desc    Create a session's results for one user
+//@route   POST /sessions/:id
+//@access  Public
+export const createSessionResult = asyncHandler(
+	async (req: Request, res: Response, next: NextFunction) => {
+		const { id } = req.params;
+
+		const session: FindSessionInfo | null = await SessionServices.findById(
+			id
+		);
+
+		if (!session) {
+			throw new ErrorResponse("Session not found.", 404);
+		}
+
+		if (!session.isActive) {
+			throw new ErrorResponse("This session is inactive.", 400);
+		}
+
+		try {
+			const { questionnaireData, userLocation } =
+				req.body as CreateSessionResultBody;
+
+			await SessionServices.createResult(
+				id,
+				questionnaireData,
+				userLocation
+			);
+
+			return res.status(201).json({
+				success: true,
+				data: {},
+				message: "Your results have been added to the session.",
+			});
+		} catch (error) {
+			console.log(error);
+			return res.status(400).json({
+				success: false,
+				data: {},
+				message: "Error creating session result.",
+			});
+		}
+	}
+);
+
+//@desc    Get a session's results
+//@route   GET /sessions/:id/results
 //@access  Public
 export const getSessionResults = asyncHandler(
 	async (req: Request, res: Response, next: NextFunction) => {
-		const { sessionId } = req.params;
+		const { id } = req.params;
 
-		const sessionStatus = await isSessionActive(sessionId);
+		const completedSession = await SessionServices.findResultsById(id);
 
-		if (!sessionStatus) {
-			return res.status(404).json({
-				success: false,
-				message: "Session not found.",
-			});
+		if (!completedSession) {
+			throw new ErrorResponse("Session not found.", 404);
 		}
-
-		if (sessionStatus.isActive) {
-			return res.status(200).json({
-				success: false,
-				data: sessionStatus,
-				message: "This session is still active.",
-			});
-		}
-
-		const questionsResults = await prisma.$queryRaw`
-		WITH AnswerCounts AS 
-		(
-		  SELECT
-			a."text",
-			a."questionText",
-			r."questionId",
-			CAST(COUNT(*) AS INTEGER) AS "voteCount"
-		  FROM
-			"Results" r
-			JOIN "Questions" q ON q."id" = r."questionId"
-			JOIN "Answers" a ON a."id" = r."answerId"
-		  WHERE
-			r."sessionUuid" = ${sessionId}
-		  GROUP BY
-			r."questionId", 
-			a."text", 
-			a."questionText"
-		),
-
-		MaxCounts AS (
-		  SELECT
-			"questionId",
-			MAX("voteCount") AS max_voteCount
-		  FROM
-			AnswerCounts
-		  GROUP BY
-			"questionId"
-		)
-
-		SELECT
-			ac."text",
-			ac."questionText",
-		  	ac."questionId",
-		 	ac."voteCount"
-		FROM
-		 	AnswerCounts ac
-		JOIN
-		  	MaxCounts mc
-		ON
-		  	ac."questionId" = mc."questionId" AND ac."voteCount" = mc.max_voteCount
-		ORDER BY
-		  	ac."questionId";
-	  `;
-
-		if (!questionsResults) {
-			return res
-				.status(404)
-				.json({ success: false, message: "Results not found." });
-		}
-
-		const { averageLatitude, averageLongitude } =
-			await prisma.sessions.findFirstOrThrow({
-				where: { uuid: sessionId },
-				select: {
-					averageLatitude: true,
-					averageLongitude: true,
-				},
-			});
 
 		return res.status(200).json({
 			success: true,
-			data: {
-				questionsResults,
-				averageLatitude: averageLatitude ?? null,
-				averageLongitude: averageLongitude ?? null,
-			},
+			data: completedSession,
 		});
 	}
 );
