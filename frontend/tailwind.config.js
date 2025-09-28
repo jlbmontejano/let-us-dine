@@ -13,6 +13,7 @@ export default {
 				sm: "calc(var(--radius) - 4px)",
 			},
 			colors: {
+				red_accent: "#FF6B6B",
 				background: "hsl(var(--background))",
 				foreground: "hsl(var(--foreground))",
 				card: {
