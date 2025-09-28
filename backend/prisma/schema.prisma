@@ -7,42 +7,61 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Sessions {
-  id                  Int       @id @default(autoincrement())
-  uuid                String    @unique
-  createdAt           DateTime  @default(now())
-  updatedAt           DateTime  @updatedAt
-  isActive            Boolean   @default(true)
+model Session {
+  id                  Int               @id @default(autoincrement())
+  uuid                String            @unique
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+  isActive            Boolean           @default(true)
   currentParticipants Int
   totalParticipants   Int
-  results             Results[]
-  averageLatitude     Float?
-  averageLongitude    Float?
+  results             Result[]
+  completedSession    CompletedSession?
 }
 
-model Questions {
-  id      Int       @id @default(autoincrement())
-  text    String    @unique
-  answers Answers[]
-  results Results[]
+model Question {
+  id        Int      @id @default(autoincrement())
+  text      String   @unique
+  answers   Answer[]
+  results   Result[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
-model Answers {
-  id           Int       @id @default(autoincrement())
-  text         String
-  questionText String
-  question     Questions @relation(fields: [questionText], references: [text])
-  results      Results[]
-
-  @@unique([questionText, text])
+model Answer {
+  id         Int      @id @default(autoincrement())
+  text       String   @unique
+  apiParams  Json
+  results    Result[]
+  question   Question @relation(fields: [questionId], references: [id])
+  questionId Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
-model Results {
-  id          Int       @id @default(autoincrement())
+model Result {
+  id          Int      @id @default(autoincrement())
+  latitude    Float
+  longitude   Float
   answerId    Int
   questionId  Int
   sessionUuid String
-  answer      Answers   @relation(fields: [answerId], references: [id])
-  question    Questions @relation(fields: [questionId], references: [id])
-  session     Sessions  @relation(fields: [sessionUuid], references: [uuid])
+  answer      Answer   @relation(fields: [answerId], references: [id])
+  question    Question @relation(fields: [questionId], references: [id])
+  session     Session  @relation(fields: [sessionUuid], references: [uuid])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model CompletedSession {
+  id           Int      @id @default(autoincrement())
+  places       Json
+  topAnswers   Json
+  centerLat    Float
+  centerLng    Float
+  radiusMeters Float
+  sessionUuid  String   @unique
+  session      Session  @relation(fields: [sessionUuid], references: [uuid])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
