@@ -1,18 +1,30 @@
 import cors from "cors";
 import express from "express";
+import rateLimit from "express-rate-limit";
+import resultRoutes from "../src/routes/result.routes";
+import sessionRoutes from "../src/routes/session.routes";
+import errorHandler from "./middleware/errorHandler";
 import answersRoutes from "./routes/answer.routes";
 import questionsRoutes from "./routes/question.routes";
-import sessionRoutes from "../src/routes/session.routes";
-import resultRoutes from "../src/routes/result.routes";
 
 const app = express();
+const limiter = rateLimit({
+	windowMs: 10 * 60 * 1000,
+	limit: 100,
+	standardHeaders: "draft-8",
+	legacyHeaders: false,
+	ipv6Subnet: 56,
+});
 
 app.use(express.json());
 app.use(cors());
+app.use(limiter);
 
-app.use(sessionRoutes);
-app.use(questionsRoutes);
-app.use(answersRoutes);
-app.use(resultRoutes);
+app.use("/results", resultRoutes);
+app.use("/sessions", sessionRoutes);
+app.use("/answers", answersRoutes);
+app.use("/questions", questionsRoutes);
+
+app.use(errorHandler);
 
 export default app;
