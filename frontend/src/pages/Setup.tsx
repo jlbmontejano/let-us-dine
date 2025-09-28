@@ -4,18 +4,17 @@ import CreateSession from "@/components/shared/SessionForms/CreateSession";
 import JoinSession from "@/components/shared/SessionForms/JoinSession";
 import { Button } from "@/components/ui/button";
 import { SessionType } from "@/types";
+import { useIsMutating } from "@tanstack/react-query";
 import { useState } from "react";
 
 const Setup = () => {
-	const [sessionId, setSessionId] = useState<string>("");
 	const [sessionType, setSessionType] = useState<SessionType>(null);
+	const isMutating = useIsMutating();
 
 	function getSessionType() {
 		switch (sessionType) {
 			case "create":
-				return (
-					<CreateSession sessionId={sessionId} setSessionId={setSessionId} />
-				);
+				return <CreateSession />;
 			case "join":
 				return <JoinSession />;
 			case "check":
@@ -26,19 +25,30 @@ const Setup = () => {
 	}
 
 	return (
-		<div className='h-full page-padding'>
-			<BackButton />
-			<div className='flex flex-col gap-4 my-10 justify-center items-center'>
-				<p>Choose an option:</p>
-				<div className='flex flex-col gap-2 w-[80%]'>
-					<Button onClick={() => setSessionType("create")}>
-						Create a Session
-					</Button>
-					<Button onClick={() => setSessionType("join")}>Join a Session</Button>
-					<Button onClick={() => setSessionType("check")}>Check Results</Button>
-				</div>
+		<div className='page-container items-center'>
+			<BackButton className='self-start' />
+			<div>
+				<h1 className='text-2xl font-semibold'>Setup Session</h1>
+				<p className='text-lg'>Choose an option:</p>
 			</div>
-			{getSessionType()}
+			<div className='flex w-full max-w-xs flex-col gap-2'>
+				<Button
+					onClick={() => setSessionType("create")}
+					disabled={isMutating > 0}>
+					Create a Session
+				</Button>
+				<Button
+					onClick={() => setSessionType("join")}
+					disabled={isMutating > 0}>
+					Join a Session
+				</Button>
+				<Button
+					onClick={() => setSessionType("check")}
+					disabled={isMutating > 0}>
+					Check Results
+				</Button>
+				{getSessionType()}
+			</div>
 		</div>
 	);
 };
