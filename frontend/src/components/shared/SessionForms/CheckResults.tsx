@@ -10,7 +10,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { checkSessionSchema } from "@/lib/zod-validation";
-import { FetchResponse, GetSession } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -31,42 +30,22 @@ const CheckResults = () => {
 	// 2. Define a submit handler.
 	async function onSubmit(values: z.infer<typeof checkSessionSchema>) {
 		try {
-			const response = await fetch(
-				`${import.meta.env.VITE_API_URL}/sessions/${values.sessionId}`,
-				{
-					method: "GET",
-					headers: {
-						"Content-Type": "application/json",
-					},
-				}
-			);
-
-			if (response.status === 404) {
-				return toast({
-					description: "Session not found.",
-					variant: "destructive",
-				});
-			}
-
-			if (response.status !== 200) {
-				return toast({
-					description: "There's been an error, please try again.",
-					variant: "destructive",
-				});
-			}
-
-			const { data }: FetchResponse<GetSession> = await response.json();
-			navigate(`/sessions/${data.uuid}/results`);
+			navigate(`/sessions/${values.sessionId}/results`);
 		} catch (error) {
-			toast({ description: "Error", variant: "destructive" });
+			toast({
+				description: "Error retrieving session",
+				variant: "destructive",
+			});
 			console.error(`${error}`);
 		}
 	}
 
 	return (
-		<div className='form-container'>
+		<div className='setup-form-container'>
 			<Form {...form}>
-				<form onSubmit={form.handleSubmit(onSubmit)} className='form'>
+				<form
+					onSubmit={form.handleSubmit(onSubmit)}
+					className='setup-form'>
 					<FormField
 						control={form.control}
 						name='sessionId'
@@ -80,7 +59,7 @@ const CheckResults = () => {
 							</FormItem>
 						)}
 					/>
-					<Button type='submit' className='form-btn'>
+					<Button type='submit' className='setup-form-btn'>
 						Check
 					</Button>
 				</form>
