@@ -1,23 +1,49 @@
+import Footer from "@/components/shared/Footer";
+import Loader from "@/pages/StateManage/Loader";
+import { Toaster } from "@/components/ui/toaster";
+import { useUserLocation } from "@/context/user-location";
+import ErrorPage from "@/pages/StateManage/ErrorPage";
 import Home from "@/pages/Home";
-import Questions from "@/pages/Questions";
+import Questions from "@/pages/Questions/Questions";
+import Results from "@/pages/Result/Results";
+import LocationDenied from "@/pages/StateManage/LocationDenied";
+import Setup from "@/pages/Setup";
 import { Route, Routes } from "react-router-dom";
-import { Toaster } from "./components/ui/toaster";
-import Setup from "./pages/Setup";
-import Error from "./pages/Error";
-import Results from "./pages/Results";
 
 function App() {
-	return (
-		<main className='w-screen h-screen'>
+	const { isLoading, locationDenied } = useUserLocation();
+
+	const renderContent = () => {
+		if (isLoading) {
+			return (
+				<Loader text='We use your location to find restaurants you and your friends can easily reach.' />
+			);
+		}
+
+		if (locationDenied) {
+			return <LocationDenied />;
+		}
+
+		return (
 			<Routes>
 				<Route path='/' element={<Home />} />
 				<Route path='/setup' element={<Setup />} />
 				<Route path='/questions/:sessionId' element={<Questions />} />
-				<Route path='/sessions/:sessionId/results' element={<Results />} />
-				<Route path='*' element={<Error />} />
+				<Route
+					path='/sessions/:sessionId/results'
+					element={<Results />}
+				/>
+				<Route path='*' element={<ErrorPage />} />
 			</Routes>
+		);
+	};
+
+	return (
+		<div className='flex h-screen w-screen flex-col'>
+			<main className='flex grow flex-col'>{renderContent()}</main>
+			<Footer />
 			<Toaster />
-		</main>
+		</div>
 	);
 }
 
