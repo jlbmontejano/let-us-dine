@@ -1,13 +1,13 @@
 import Footer from "@/components/shared/Footer";
-import Loader from "@/pages/StateManage/Loader";
 import { Toaster } from "@/components/ui/toaster";
 import { useUserLocation } from "@/context/user-location";
-import ErrorPage from "@/pages/StateManage/ErrorPage";
 import Home from "@/pages/Home";
 import Questions from "@/pages/Questions/Questions";
 import Results from "@/pages/Result/Results";
-import LocationDenied from "@/pages/StateManage/LocationDenied";
 import Setup from "@/pages/Setup";
+import ErrorPage from "@/pages/StateManage/ErrorPage";
+import Loader from "@/pages/StateManage/Loader";
+import LocationDenied from "@/pages/StateManage/LocationDenied";
 import { Route, Routes } from "react-router-dom";
 
 function App() {
