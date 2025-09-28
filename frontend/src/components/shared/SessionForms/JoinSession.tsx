@@ -9,8 +9,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { joinSessionSchema } from "@/lib/zod-validation";
-import { FetchResponse, GetSession } from "@/types";
+import { checkSessionSchema } from "@/lib/zod-validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -21,66 +20,40 @@ const JoinSession = () => {
 	const navigate = useNavigate();
 
 	// 1. Define your form.
-	const form = useForm<z.infer<typeof joinSessionSchema>>({
-		resolver: zodResolver(joinSessionSchema),
+	const form = useForm<z.infer<typeof checkSessionSchema>>({
+		resolver: zodResolver(checkSessionSchema),
 		defaultValues: {
 			sessionId: "",
 		},
 	});
 
 	// 2. Define a submit handler.
-	async function onSubmit(values: z.infer<typeof joinSessionSchema>) {
+	async function onSubmit(values: z.infer<typeof checkSessionSchema>) {
 		try {
-			const response = await fetch(
-				`${import.meta.env.VITE_API_URL}/sessions/${values.sessionId}`,
-				{
-					method: "GET",
-					headers: {
-						"Content-Type": "application/json",
-					},
-				}
-			);
-
-			if (response.status === 404) {
-				return toast({
-					description: "Session not found.",
-					variant: "destructive",
-				});
-			}
-
-			if (response.status !== 200) {
-				return toast({
-					description: "There's been an error, please try again.",
-					variant: "destructive",
-				});
-			}
-
-			const { data }: FetchResponse<GetSession> = await response.json();
-
-			if (!data.isActive) {
-				return toast({
-					description: "This session is already full.",
-					variant: "destructive",
-				});
-			}
-
-			navigate(`/questions/${data.uuid}`);
+			navigate(`/questions/${values.sessionId}`);
 		} catch (error) {
-			toast({ description: "Error", variant: "destructive" });
+			toast({
+				description: "Error retrieving session",
+				variant: "destructive",
+			});
 			console.error(`${error}`);
 		}
 	}
 
 	return (
-		<div className='form-container'>
+		<div className='setup-form-container'>
 			<Form {...form}>
-				<form onSubmit={form.handleSubmit(onSubmit)} className='form'>
+				<form
+					onSubmit={form.handleSubmit(onSubmit)}
+					className='setup-form'>
 					<FormField
 						control={form.control}
 						name='sessionId'
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel>Enter the ID shared with you:</FormLabel>
+								<FormLabel>
+									Enter the ID shared with you:
+								</FormLabel>
 								<FormControl>
 									<Input {...field} />
 								</FormControl>
@@ -88,7 +61,7 @@ const JoinSession = () => {
 							</FormItem>
 						)}
 					/>
-					<Button type='submit' className='form-btn'>
+					<Button type='submit' className='setup-form-btn'>
 						Join
 					</Button>
 				</form>
