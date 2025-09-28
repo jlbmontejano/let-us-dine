@@ -114,53 +114,44 @@ const Questions = () => {
 	return (
 		<div className='flex grow flex-col'>
 			<Header currentQuestion={currentQuestion} />
-			<div className='page-container w-full max-w-xl self-center'>
+			<section className='page-container w-full max-w-xl self-center'>
 				<Form {...form}>
-					<div>
-						<FormField
-							control={form.control}
-							name='currentAnswer'
-							render={({ field }) => (
-								<FormItem>
-									<FormControl>
-										<RadioGroup
-											value={field.value}
-											onValueChange={handleAnswerChange}
-											className='grid grid-cols-2'>
-											{QUESTIONS[
-												currentQuestion
-											].answers.map(
-												(
-													{ text },
-													optionsessionIdx,
-												) => (
-													<FormItem
-														className={`flex h-[70px] w-full cursor-pointer items-center space-y-0 rounded-xl bg-gray-100 p-4 transition-all duration-200 ${selectedAnswers[currentQuestion] === text ? "bg-red_accent text-white" : "hover:bg-gray-300"}`}
-														key={optionsessionIdx}
-														onClick={() =>
-															handleAnswerChange(
-																text,
-															)
-														}>
-														<FormControl>
-															<RadioGroupItem
-																value={text}
-																className='sr-only'
-															/>
-														</FormControl>
-														<FormLabel className='w-full cursor-pointer text-center font-semibold'>
-															{text}
-														</FormLabel>
-													</FormItem>
-												),
-											)}
-											<FormMessage />
-										</RadioGroup>
-									</FormControl>
-								</FormItem>
-							)}
-						/>
-					</div>
+					<FormField
+						control={form.control}
+						name='currentAnswer'
+						render={({ field }) => (
+							<FormItem>
+								<FormControl>
+									<RadioGroup
+										value={field.value}
+										onValueChange={handleAnswerChange}
+										className='grid grid-cols-2'>
+										{QUESTIONS[currentQuestion].answers.map(
+											({ text }, optionsessionIdx) => (
+												<FormItem
+													className={`flex h-[70px] w-full cursor-pointer items-center space-y-0 rounded-xl bg-gray-100 p-4 transition-all duration-200 ${selectedAnswers[currentQuestion] === text ? "bg-red_accent text-white" : "hover:bg-gray-300"}`}
+													key={optionsessionIdx}
+													onClick={() =>
+														handleAnswerChange(text)
+													}>
+													<FormControl>
+														<RadioGroupItem
+															value={text}
+															className='sr-only'
+														/>
+													</FormControl>
+													<FormLabel className='w-full cursor-pointer text-center font-semibold'>
+														{text}
+													</FormLabel>
+												</FormItem>
+											),
+										)}
+										<FormMessage />
+									</RadioGroup>
+								</FormControl>
+							</FormItem>
+						)}
+					/>
 				</Form>
 				<ButtonNavigation
 					currentQuestion={currentQuestion}
@@ -168,7 +159,7 @@ const Questions = () => {
 					isPending={isPending}
 					handleSubmit={handleSubmit}
 				/>
-			</div>
+			</section>
 		</div>
 	);
 };

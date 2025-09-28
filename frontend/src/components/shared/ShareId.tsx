@@ -25,10 +25,10 @@ const ShareId = ({ sessionId }: ShareIdProps) => {
 	};
 
 	return (
-		<>
+		<section>
 			<Label>Remember to share the session ID:</Label>
 			<Button onClick={handleCopyId}>{sessionId}</Button>
-		</>
+		</section>
 	);
 };
 

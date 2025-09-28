@@ -6,7 +6,7 @@ type TopAnswersProps = {
 
 const TopAnswers = ({ topAnswers }: TopAnswersProps) => {
 	return (
-		<div className='grid gap-4 lg:grid-cols-2'>
+		<section className='grid gap-4 lg:grid-cols-2'>
 			{topAnswers.map(
 				(
 					{ answer_text, question_text, vote_count }: TopAnswer,
@@ -36,7 +36,7 @@ const TopAnswers = ({ topAnswers }: TopAnswersProps) => {
 					</div>
 				),
 			)}
-		</div>
+		</section>
 	);
 };
 

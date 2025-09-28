@@ -13,18 +13,18 @@ const Header = ({ currentQuestion }: HeaderProps) => {
 	};
 
 	return (
-		<div className='flex w-full flex-col items-center justify-center gap-4 bg-red_accent px-4 py-6 text-white'>
-			<p>
+		<header className='flex w-full flex-col items-center justify-center gap-4 bg-red_accent px-4 py-6 text-center text-white'>
+			<h2>
 				Question {currentQuestion + 1} of {QUESTIONS.length}
-			</p>
+			</h2>
 			<Progress
 				value={calculateProgress(currentQuestion)}
 				className='max-w-lg'
 			/>
-			<p className='text-xl font-semibold'>
+			<h1 className='text-2xl font-semibold'>
 				{QUESTIONS[currentQuestion].text}
-			</p>
-		</div>
+			</h1>
+		</header>
 	);
 };
 

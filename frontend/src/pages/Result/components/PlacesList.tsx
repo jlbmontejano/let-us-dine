@@ -42,10 +42,10 @@ const PlacesList = ({ places }: PlacesListProps) => {
 	}
 
 	return (
-		<div>
-			<p className='py-4 text-center text-4xl font-semibold'>
+		<section>
+			<h1 className='py-4 text-center text-4xl font-semibold'>
 				The results are here!
-			</p>
+			</h1>
 			<div className='flex flex-col gap-4'>
 				{places.map((place: GooglePlace) => (
 					<div
@@ -135,7 +135,7 @@ const PlacesList = ({ places }: PlacesListProps) => {
 					</div>
 				))}
 			</div>
-		</div>
+		</section>
 	);
 };
 

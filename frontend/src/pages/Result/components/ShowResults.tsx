@@ -37,7 +37,7 @@ const ShowResults = ({ sessionId }: ShowResultsProps) => {
 	}
 
 	return (
-		<div className='flex flex-col gap-4'>
+		<section className='flex flex-col gap-4'>
 			{Object.entries(sessionResult.places ?? []).length === 0 ? (
 				<NoResults />
 			) : (
@@ -45,7 +45,7 @@ const ShowResults = ({ sessionId }: ShowResultsProps) => {
 			)}
 
 			<TopAnswers topAnswers={sessionResult.topAnswers} />
-		</div>
+		</section>
 	);
 };
 
