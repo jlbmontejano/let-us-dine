@@ -60,6 +60,24 @@
 }
 
 @layer base {
+	:root {
+		--chart-1: oklch(0.646 0.222 41.116);
+		--chart-2: oklch(0.6 0.118 184.704);
+		--chart-3: oklch(0.398 0.07 227.392);
+		--chart-4: oklch(0.828 0.189 84.429);
+		--chart-5: oklch(0.769 0.188 70.08);
+	}
+
+	.dark {
+		--chart-1: oklch(0.488 0.243 264.376);
+		--chart-2: oklch(0.696 0.17 162.48);
+		--chart-3: oklch(0.769 0.188 70.08);
+		--chart-4: oklch(0.627 0.265 303.9);
+		--chart-5: oklch(0.645 0.246 16.439);
+	}
+}
+
+@layer base {
 	* {
 		@apply border-border font-roboto;
 	}
@@ -88,19 +106,35 @@
 }
 
 @layer components {
-	.page-padding {
-		@apply p-6;
+	.padding-control {
+		@apply p-2 lg:px-4;
 	}
 
-	.form-container {
-		@apply m-auto w-[80%]
+	.page-container {
+		@apply padding-control flex grow flex-col gap-4;
 	}
 
-	.form {
-		@apply space-y-4 flex flex-col
+	.helper-container {
+		@apply page-container w-screen grow items-center justify-center;
 	}
 
-	.form-btn {
-		@apply self-center w-[60%]
+	.helper-container-title {
+		@apply text-center text-2xl font-semibold md:text-3xl;
+	}
+
+	.setup-form-container {
+		@apply mt-4 w-full max-w-xs;
+	}
+
+	.setup-form {
+		@apply flex flex-col space-y-4;
+	}
+
+	.setup-form-btn {
+		@apply w-[60%] max-w-xs self-center;
+	}
+
+	.place-list-details {
+		@apply flex items-center gap-2;
 	}
 }
