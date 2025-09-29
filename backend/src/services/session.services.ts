@@ -1,9 +1,8 @@
-import { Prisma, PrismaClient } from "@prisma/client";
-import { DefaultArgs } from "@prisma/client/runtime/library";
 import QUESTIONS from "../../../shared/constants/questions";
 import { QuestionData } from "../../../shared/types";
 import prisma from "../../prisma/prismaClient";
 import { PostFormatLocation, PreFormatLocation } from "../types";
+import buildLocationsArray from "../utils/buildLocationsArray";
 import calculateTopAnswers from "../utils/calculateTopAnswers";
 import calculateWeightedCentroid from "../utils/calculateWeightedCentroid";
 import ErrorResponse from "../utils/errorResponse";
@@ -120,23 +119,8 @@ export async function createResult(
 				});
 
 			// Build necessary object for calculateWeightedCentroid function
-			const locationsArray: PostFormatLocation[] = usersLocations.map(
-				user => {
-					const apiParams = user.answer.apiParams as {
-						maxTravelDistance: number;
-					};
-
-					const { maxTravelDistance } = apiParams;
-
-					return {
-						latitude: user.latitude,
-						longitude: user.longitude,
-						maxTravelDistance: Number(
-							JSON.stringify(maxTravelDistance)
-						),
-					};
-				}
-			);
+			const locationsArray: PostFormatLocation[] =
+				buildLocationsArray(usersLocations);
 
 			// Calculate weighted centroid before updating session
 			const { centerLat, centerLng, radiusMeters } =
