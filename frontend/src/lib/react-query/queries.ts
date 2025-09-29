@@ -2,33 +2,22 @@ import { useToast } from "@/hooks/use-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { CreateSessionResultBody } from "../../../../shared/types";
+import apiFetch from "./apiFetch";
 import QUERY_KEYS from "./queryKeys";
+import { SessionResult, SessionStatus } from "@/types";
 
 export const useCreateSession = () => {
 	const queryClient = useQueryClient();
 
 	return useMutation({
-		mutationFn: async (totalParticipants: number) => {
-			const response = await fetch(
+		mutationFn: (totalParticipants: number) =>
+			apiFetch<SessionStatus>(
 				`${import.meta.env.VITE_API_URL}/sessions`,
 				{
 					method: "POST",
-					body: JSON.stringify({
-						totalParticipants,
-					}),
-					headers: {
-						"Content-Type": "application/json",
-					},
+					body: JSON.stringify({ totalParticipants }),
 				},
-			);
-
-			if (!response.ok) throw new Error("Network or server error");
-
-			const json = await response.json();
-			if (!json.success) throw new Error("response.json() failed");
-
-			return json.data;
-		},
+			),
 		onSuccess: () => {
 			queryClient.invalidateQueries({
 				queryKey: [QUERY_KEYS.GET_RESULTS, QUERY_KEYS.GET_SESSION],
@@ -42,36 +31,21 @@ export const useCreateResults = () => {
 	const queryClient = useQueryClient();
 
 	return useMutation({
-		mutationFn: async ({
+		mutationFn: ({
 			sessionId,
 			reqBody,
 		}: {
 			sessionId: string;
 			reqBody: CreateSessionResultBody;
-		}) => {
-			const response = await fetch(
-				`${import.meta.env.VITE_API_URL}/sessions/${sessionId}`,
-				{
-					method: "POST",
-					body: JSON.stringify(reqBody),
-					headers: {
-						"Content-Type": "application/json",
-					},
-				},
-			);
-
-			if (!response.ok) throw new Error("Network or server error");
-
-			const json = await response.json();
-			if (!json.success) throw new Error("response.json() failed");
-
-			return json.data;
-		},
+		}) =>
+			apiFetch(`${import.meta.env.VITE_API_URL}/sessions/${sessionId}`, {
+				method: "POST",
+				body: JSON.stringify(reqBody),
+			}),
 		onSuccess: (_, { sessionId }) => {
 			queryClient.invalidateQueries({
 				queryKey: [QUERY_KEYS.GET_RESULTS, QUERY_KEYS.GET_SESSION],
 			});
-
 			navigate(`/sessions/${sessionId}/results`);
 		},
 	});
@@ -82,36 +56,19 @@ export const useCheckSession = () => {
 	const { toast } = useToast();
 
 	return useMutation({
-		mutationFn: async (sessionId: string) => {
-			const response = await fetch(
+		mutationFn: (sessionId: string) =>
+			apiFetch<SessionStatus>(
 				`${import.meta.env.VITE_API_URL}/sessions/${sessionId}`,
-				{
-					method: "GET",
-					headers: {
-						"Content-Type": "application/json",
-					},
-				},
-			);
-
-			if (response.status === 404) {
-				throw new Error("Session not found");
-			}
-
-			if (!response.ok) throw new Error("Network or server error");
-
-			const json = await response.json();
-			if (!json.success) throw new Error("response.json() failed");
-
-			const { isActive } = json.data;
-
-			if (!isActive) {
-				throw new Error("Inactive session");
-			}
-
-			return json.data;
-		},
+			),
 		onSuccess: data => {
-			navigate(`/questions/${data.id}`);
+			if (!data.isActive) {
+				toast({
+					description: "Inactive session",
+					variant: "destructive",
+				});
+				return;
+			}
+			navigate(`/questions/${data.uuid}`);
 		},
 		onError: error => {
 			toast({
@@ -122,60 +79,22 @@ export const useCheckSession = () => {
 	});
 };
 
-export const useGetSession = (sessionId: string) => {
-	return useQuery({
+export const useGetSession = (sessionId: string) =>
+	useQuery({
 		queryKey: [QUERY_KEYS.GET_SESSION, sessionId],
 		enabled: !!sessionId,
-		queryFn: async () => {
-			const response = await fetch(
+		queryFn: () =>
+			apiFetch<SessionStatus>(
 				`${import.meta.env.VITE_API_URL}/sessions/${sessionId}`,
-				{
-					method: "GET",
-					headers: {
-						"Content-Type": "application/json",
-					},
-				},
-			);
-
-			if (response.status === 404) {
-				throw new Error("Session not found");
-			}
-
-			if (!response.ok) throw new Error("Network or server error");
-
-			const json = await response.json();
-			if (!json.success) throw new Error("response.json() failed");
-
-			return json.data;
-		},
+			),
 	});
-};
 
-export const useGetResults = (sessionId: string) => {
-	return useQuery({
+export const useGetResults = (sessionId: string) =>
+	useQuery({
 		queryKey: [QUERY_KEYS.GET_RESULTS, sessionId],
 		enabled: !!sessionId,
-		queryFn: async () => {
-			const response = await fetch(
+		queryFn: () =>
+			apiFetch<SessionResult>(
 				`${import.meta.env.VITE_API_URL}/sessions/${sessionId}/results`,
-				{
-					method: "GET",
-					headers: {
-						"Content-Type": "application/json",
-					},
-				},
-			);
-
-			if (response.status === 404) {
-				throw new Error();
-			}
-
-			if (!response.ok) throw new Error("Network or server error");
-
-			const json = await response.json();
-			if (!json.success) throw new Error("response.json() failed");
-
-			return json.data;
-		},
+			),
 	});
-};
