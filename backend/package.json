@@ -6,8 +6,8 @@
 		"dev": "nodemon index.ts",
 		"dev:reset": "prisma db push --force-reset",
 		"test": "jest",
-		"build": "tsc",
-		"seed": "node prisma/seed.js",
+		"build": "tsc && npx prisma generate && npm run seed",
+		"seed": "node dist/backend/prisma/seed.js",
 		"start": "node dist/backend/index.js"
 	},
 	"author": "",
