@@ -7,7 +7,7 @@ type ShowProgressProps = {
 
 const ShowProgress = ({ sessionStatus }: ShowProgressProps) => {
 	return (
-		<div className='mx-auto flex w-[80%] flex-col gap-4'>
+		<div className='flex flex-col items-center gap-4'>
 			<section className='mb-6 text-center'>
 				<h1 className='text-2xl font-semibold'>Responses pending!</h1>
 				<p>

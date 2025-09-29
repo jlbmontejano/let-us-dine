@@ -114,7 +114,7 @@ const Questions = () => {
 	return (
 		<div className='flex grow flex-col'>
 			<Header currentQuestion={currentQuestion} />
-			<section className='page-container w-full max-w-xl self-center'>
+			<section className='page-container w-full max-w-xl justify-between self-center'>
 				<Form {...form}>
 					<FormField
 						control={form.control}
