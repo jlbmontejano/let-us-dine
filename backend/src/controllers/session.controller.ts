@@ -31,7 +31,7 @@ export const createSession = asyncHandler(
 				totalParticipants
 			);
 
-			return res.status(200).json({
+			return res.status(201).json({
 				success: true,
 				data: session,
 			});
@@ -107,14 +107,12 @@ export const createSessionResult = asyncHandler(
 
 			return res.status(201).json({
 				success: true,
-				data: {},
 				message: "Your results have been added to the session.",
 			});
 		} catch (error) {
 			console.log(error);
 			return res.status(400).json({
 				success: false,
-				data: {},
 				message: "Error creating session result.",
 			});
 		}
