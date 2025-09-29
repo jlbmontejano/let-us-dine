@@ -1,4 +1,4 @@
-<img width="2400" height="1590" alt="LUD-Welcome" src="https://github.com/user-attachments/assets/6632531b-3a8a-4fb6-94a5-c65e896bb658" />
+<img width="2400" height="1590" alt="LUD-Welcome" src="https://github.com/user-attachments/assets/d69946da-cbcf-4229-ada7-0402b7e8ab35" />
 <img width="2400" height="1590" alt="LUD-Options" src="https://github.com/user-attachments/assets/0b789aee-2cd2-4aa3-a867-889df1c7ca3a" />
 <img width="2400" height="1590" alt="LUD-Quiz" src="https://github.com/user-attachments/assets/b1085f40-8b5a-4b35-a5b8-0af70f0d158d" />
 <img width="2400" height="1590" alt="LUD-Submit" src="https://github.com/user-attachments/assets/8585c494-f8f0-4161-abdf-2fa80377da2d" />
