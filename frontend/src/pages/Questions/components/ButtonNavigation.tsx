@@ -17,7 +17,7 @@ const ButtonNavigation = ({
 	handleSubmit,
 }: ButtonNavigationProps) => {
 	return (
-		<section className='flex justify-between px-2'>
+		<section className='flex justify-between'>
 			{currentQuestion === 0 ? (
 				<BackButton />
 			) : (
@@ -33,7 +33,6 @@ const ButtonNavigation = ({
 			) : (
 				<Button
 					type='submit'
-					className='self-end'
 					onClick={handleSubmit}
 					disabled={isPending}>
 					{isPending ? "Submitting..." : "Submit"}
