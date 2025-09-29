@@ -20,6 +20,7 @@ const Results = () => {
 
 	useEffect(() => {
 		if (!sessionId || statusError) {
+			navigate("/setup");
 			toast({
 				description: "Error fetching session data",
 				variant: "destructive",
