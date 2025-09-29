@@ -1,11 +1,10 @@
+import { useToast } from "@/hooks/use-toast";
 import { useGetResults } from "@/lib/react-query/queries";
 import ErrorPage from "@/pages/StateManage/ErrorPage";
+import { useEffect } from "react";
 import NoResults from "./NoResults";
 import PlacesList from "./PlacesList";
 import TopAnswers from "./TopAnswers";
-import { useEffect } from "react";
-import { useToast } from "@/hooks/use-toast";
-import Loader from "@/pages/StateManage/Loader";
 
 type ShowResultsProps = {
 	sessionId: string;
@@ -33,7 +32,11 @@ const ShowResults = ({ sessionId }: ShowResultsProps) => {
 	}
 
 	if (resultsPending) {
-		return <Loader />;
+		return (
+			<section className='flex w-full items-center justify-center'>
+				<p className='helper-container-title'>Loading...</p>
+			</section>
+		);
 	}
 
 	return (
