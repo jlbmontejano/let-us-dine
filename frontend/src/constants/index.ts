@@ -1,34 +1,34 @@
 export const CAROUSEL_IMAGES = [
 	{
-		src: "images/fruit.jpg",
+		src: "images/fruit.webp",
 		alt: "fruit",
 	},
 	{
-		src: "images/fusion.jpg",
+		src: "images/fusion.webp",
 		alt: "fusion",
 	},
 	{
-		src: "images/hamburger.jpg",
+		src: "images/hamburger.webp",
 		alt: "hamburger",
 	},
 	{
-		src: "images/japanese.jpg",
+		src: "images/japanese.webp",
 		alt: "japanese",
 	},
 	{
-		src: "images/pancakes.jpg",
+		src: "images/pancakes.webp",
 		alt: "pancakes",
 	},
 	{
-		src: "images/pasta.jpg",
+		src: "images/pasta.webp",
 		alt: "pasta",
 	},
 	{
-		src: "images/tacos.jpg",
+		src: "images/tacos.webp",
 		alt: "tacos",
 	},
 	{
-		src: "images/tiramisu.jpg",
+		src: "images/tiramisu.webp",
 		alt: "tiramisu",
 	},
 ];
