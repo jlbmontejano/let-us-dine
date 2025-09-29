@@ -8,7 +8,6 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/hooks/use-toast";
 import { checkSessionSchema } from "@/lib/zod-validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -16,7 +15,6 @@ import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 
 const CheckResults = () => {
-	const { toast } = useToast();
 	const navigate = useNavigate();
 
 	// 1. Define your form.
@@ -29,15 +27,7 @@ const CheckResults = () => {
 
 	// 2. Define a submit handler.
 	async function onSubmit(values: z.infer<typeof checkSessionSchema>) {
-		try {
-			navigate(`/sessions/${values.sessionId}/results`);
-		} catch (error) {
-			toast({
-				description: "Error retrieving session",
-				variant: "destructive",
-			});
-			console.error(`${error}`);
-		}
+		navigate(`/sessions/${values.sessionId}/results`);
 	}
 
 	return (
