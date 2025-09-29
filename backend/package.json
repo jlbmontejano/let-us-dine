@@ -8,6 +8,7 @@
 		"test": "jest",
 		"build": "tsc && npx prisma generate && npm run seed",
 		"seed": "node dist/backend/prisma/seed.js",
+		"seed:dev": "ts-node prisma/seed.ts",
 		"start": "node dist/backend/index.js"
 	},
 	"author": "",
