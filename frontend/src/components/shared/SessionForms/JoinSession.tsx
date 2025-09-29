@@ -8,16 +8,14 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/hooks/use-toast";
+import { useCheckSession } from "@/lib/react-query/queries";
 import { checkSessionSchema } from "@/lib/zod-validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 
 const JoinSession = () => {
-	const { toast } = useToast();
-	const navigate = useNavigate();
+	const { mutateAsync: checkSession } = useCheckSession();
 
 	// 1. Define your form.
 	const form = useForm<z.infer<typeof checkSessionSchema>>({
@@ -29,15 +27,7 @@ const JoinSession = () => {
 
 	// 2. Define a submit handler.
 	async function onSubmit(values: z.infer<typeof checkSessionSchema>) {
-		try {
-			navigate(`/questions/${values.sessionId}`);
-		} catch (error) {
-			toast({
-				description: "Error retrieving session",
-				variant: "destructive",
-			});
-			console.error(`${error}`);
-		}
+		checkSession(values.sessionId);
 	}
 
 	return (
