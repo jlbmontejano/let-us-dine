@@ -6,7 +6,8 @@
 		"dev": "nodemon index.ts",
 		"dev:reset": "prisma db push --force-reset",
 		"test": "jest",
-		"seed": "ts-node prisma/seed.ts"
+		"seed": "ts-node prisma/seed.ts",
+		"start": "ts-node index.ts"
 	},
 	"author": "",
 	"license": "ISC",
