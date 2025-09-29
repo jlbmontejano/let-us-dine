@@ -5,9 +5,7 @@ export default async function calculateTopAnswers(
 	id: string,
 	txClient: Prisma.TransactionClient
 ): Promise<TopAnswer[]> {
-	const client = txClient;
-
-	const results = await client.$queryRaw<TopAnswer[]>`
+	return txClient.$queryRaw<TopAnswer[]>`
   		WITH AnswerCounts AS 
   		(
   		  SELECT
@@ -54,6 +52,4 @@ export default async function calculateTopAnswers(
   		ORDER BY
   		  ac."questionId"
 	`;
-
-	return results;
 }
