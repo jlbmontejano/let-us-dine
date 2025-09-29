@@ -8,7 +8,7 @@ export default async function apiFetch<T>(
 	});
 
 	if (response.status === 404) {
-		throw new Error("Not found");
+		throw new Error("Session not found");
 	}
 
 	if (!response.ok) {

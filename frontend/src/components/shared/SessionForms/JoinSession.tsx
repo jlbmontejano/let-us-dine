@@ -15,7 +15,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const JoinSession = () => {
-	const { mutateAsync: checkSession } = useCheckSession();
+	const { mutateAsync: checkSession, isPending } = useCheckSession();
 
 	// 1. Define your form.
 	const form = useForm<z.infer<typeof checkSessionSchema>>({
@@ -51,7 +51,10 @@ const JoinSession = () => {
 							</FormItem>
 						)}
 					/>
-					<Button type='submit' className='setup-form-btn'>
+					<Button
+						type='submit'
+						disabled={isPending}
+						className='setup-form-btn'>
 						Join
 					</Button>
 				</form>
