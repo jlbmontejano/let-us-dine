@@ -1,18 +1,22 @@
+import { Prisma } from "@prisma/client";
 import { TopAnswer } from "../../../shared/types";
-import prisma from "../../prisma/prismaClient";
 
 export default async function calculateTopAnswers(
-	id: string
+	id: string,
+	txClient: Prisma.TransactionClient
 ): Promise<TopAnswer[]> {
-	return prisma.$queryRaw`
+	const client = txClient;
+
+	const results = await client.$queryRaw<TopAnswer[]>`
   		WITH AnswerCounts AS 
   		(
   		  SELECT
-  		    a."text" as answer_text,
-			a."apiParams" as answer_api_params,
-  		    q."text" as question_text, 
-  		    r."questionId" as question_id,
-  		    CAST(COUNT(*) AS INTEGER) AS vote_count
+  		    a."text" as "answerText",
+			a."apiParams" as "answerApiParams",
+  		    q."text" as "questionText", 
+  		    r."questionId" as "questionId",
+  		    r."answerId" as "answerId",
+  		    CAST(COUNT(*) AS INTEGER) AS "voteCount"
   		  FROM
   		    "Result" r
   		    JOIN "Question" q ON q."id" = r."questionId"
@@ -20,7 +24,8 @@ export default async function calculateTopAnswers(
   		  WHERE
   		    r."sessionUuid" = ${id}
   		  GROUP BY
-  		    r."questionId", 
+  		    r."questionId",
+  		    r."answerId",
   		    a."text",
 			a."apiParams",
   		    q."text"
@@ -28,25 +33,27 @@ export default async function calculateTopAnswers(
 	
   		MaxCounts AS (
   		  SELECT
-  		    question_id,
-  		    MAX(vote_count) AS max_vote_count
+  		    "questionId",
+  		    MAX("voteCount") AS "maxVoteCount"
   		  FROM
   		    AnswerCounts
   		  GROUP BY
-  		    question_id
+  		    "questionId"
   		)
 	
   		SELECT
-  		  ac.answer_text,
-		  ac.answer_api_params,
-  		  ac.question_text,
-  		  ac.vote_count
+  		  ac."answerText",
+		  ac."answerApiParams",
+  		  ac."questionText",
+  		  ac."voteCount"
   		FROM
   		  AnswerCounts ac
   		JOIN
-  		  MaxCounts mc ON ac.question_id = mc.question_id 
-  		               AND ac.vote_count = mc.max_vote_count
+  		  MaxCounts mc ON ac."questionId" = mc."questionId" 
+  		               AND ac."voteCount" = mc."maxVoteCount"
   		ORDER BY
-  		  ac.question_id
+  		  ac."questionId"
 	`;
+
+	return results;
 }
