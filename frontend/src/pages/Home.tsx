@@ -16,7 +16,7 @@ const Home = () => {
 			<div className='flex grow flex-col items-center justify-center px-12 text-center text-4xl xl:text-5xl'>
 				<h1 className='mb-4'>
 					Welcome to <br />
-					<span className='font-semibold'>Craving Compass</span>
+					<span className='font-semibold'>Let Us Dine</span>
 				</h1>
 				<Button onClick={() => navigate("/setup")}>Get Started!</Button>
 			</div>
