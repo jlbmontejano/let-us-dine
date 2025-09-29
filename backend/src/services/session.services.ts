@@ -1,7 +1,9 @@
+import { Prisma, PrismaClient } from "@prisma/client";
+import { DefaultArgs } from "@prisma/client/runtime/library";
 import QUESTIONS from "../../../shared/constants/questions";
 import { QuestionData } from "../../../shared/types";
 import prisma from "../../prisma/prismaClient";
-import { UserLocation } from "../types";
+import { PostFormatLocation, PreFormatLocation } from "../types";
 import calculateTopAnswers from "../utils/calculateTopAnswers";
 import calculateWeightedCentroid from "../utils/calculateWeightedCentroid";
 import ErrorResponse from "../utils/errorResponse";
@@ -44,7 +46,7 @@ export async function createResult(
 	questionnaireData: QuestionData[],
 	userLocation: GeolocationCoordinates
 ) {
-	return prisma.$transaction(async tx => {
+	return prisma.$transaction(async (tx: any) => {
 		const createdResults = [];
 
 		for (let i = 0; i < questionnaireData.length; i++) {
@@ -102,39 +104,43 @@ export async function createResult(
 			});
 
 			// Fetch all users' lat, long and maxTravelDistance
-			const userLocations = await tx.result.findMany({
-				where: {
-					sessionUuid: sessionId,
-					question: {
-						text: RADIUS_QUESTION,
+			const usersLocations: PreFormatLocation[] =
+				await tx.result.findMany({
+					where: {
+						sessionUuid: sessionId,
+						question: {
+							text: RADIUS_QUESTION,
+						},
 					},
-				},
-				select: {
-					latitude: true,
-					longitude: true,
-					answer: { select: { apiParams: true } },
-				},
-			});
+					select: {
+						latitude: true,
+						longitude: true,
+						answer: { select: { apiParams: true } },
+					},
+				});
 
 			// Build necessary object for calculateWeightedCentroid function
-			const locationsObject: UserLocation[] = userLocations.map(user => {
-				const apiParams = user.answer.apiParams as {
-					maxTravelDistance: number;
-				};
-				const { maxTravelDistance } = apiParams;
+			const locationsArray: PostFormatLocation[] = usersLocations.map(
+				user => {
+					const apiParams = user.answer.apiParams as {
+						maxTravelDistance: number;
+					};
 
-				return {
-					latitude: user.latitude,
-					longitude: user.longitude,
-					maxTravelDistance: Number(
-						JSON.stringify(maxTravelDistance)
-					),
-				};
-			});
+					const { maxTravelDistance } = apiParams;
+
+					return {
+						latitude: user.latitude,
+						longitude: user.longitude,
+						maxTravelDistance: Number(
+							JSON.stringify(maxTravelDistance)
+						),
+					};
+				}
+			);
 
 			// Calculate weighted centroid before updating session
 			const { centerLat, centerLng, radiusMeters } =
-				calculateWeightedCentroid(locationsObject);
+				calculateWeightedCentroid(locationsArray);
 
 			const topAnswers = await calculateTopAnswers(sessionId);
 

@@ -1,5 +1,3 @@
-import { GooglePlace, TopAnswer } from "../../../shared/types";
-
 export type FindAnswerInfo = {
 	text: string;
 	question: {
@@ -39,7 +37,15 @@ export type FindSessionInfo = {
 	totalParticipants: number;
 };
 
-export type UserLocation = {
+export type PreFormatLocation = {
+	answer: {
+		apiParams: any;
+	};
+	latitude: number;
+	longitude: number;
+};
+
+export type PostFormatLocation = {
 	latitude: number;
 	longitude: number;
 	maxTravelDistance: number;

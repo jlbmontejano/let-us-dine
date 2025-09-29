@@ -1,4 +1,4 @@
-import { UserLocation } from "../types";
+import { PostFormatLocation } from "../types";
 
 type SearchArea = {
 	centerLat: number;
@@ -7,7 +7,7 @@ type SearchArea = {
 };
 
 export default function calculateWeightedCentroid(
-	userLocations: UserLocation[]
+	userLocations: PostFormatLocation[]
 ): SearchArea {
 	// Weight by inverse of travel distance (users willing to travel less get more weight)
 	const totalWeight = userLocations.reduce(
