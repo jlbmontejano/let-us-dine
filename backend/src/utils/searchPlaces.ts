@@ -82,14 +82,14 @@ export default async function searchPlaces(
 		console.log("googlePlace before filtering: ", data.places.length);
 
 		const priceLevelAnswer =
-			topAnswers[PRICE_LEVEL_INDEX].answer_api_params.price!;
+			topAnswers[PRICE_LEVEL_INDEX].answerApiParams.price!;
 		const mealTypeAnswer =
-			topAnswers[MEAL_TYPE_INDEX].answer_api_params.mealType!;
-		const vibeAnswer = topAnswers[VIBE_INDEX].answer_api_params.vibe!;
+			topAnswers[MEAL_TYPE_INDEX].answerApiParams.mealType!;
+		const vibeAnswer = topAnswers[VIBE_INDEX].answerApiParams.vibe!;
 		const minRatingAnswer =
-			topAnswers[MIN_RATING_INDEX].answer_api_params.minRating!;
+			topAnswers[MIN_RATING_INDEX].answerApiParams.minRating!;
 		const beveragesAnswer =
-			topAnswers[BEVERAGES_INDEX].answer_api_params.beverages!;
+			topAnswers[BEVERAGES_INDEX].answerApiParams.beverages!;
 
 		return data.places
 			.filter((place: any) => {

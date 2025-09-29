@@ -9,8 +9,8 @@ export type QuestionData = {
 };
 
 export type TopAnswer = {
-	answer_text: string;
-	answer_api_params: {
+	answerText: string;
+	answerApiParams: {
 		category?: string;
 		price?: string;
 		mealType?: string;
@@ -18,8 +18,8 @@ export type TopAnswer = {
 		minRating?: number;
 		beverages?: string;
 	};
-	question_text: string;
-	vote_count: string;
+	questionText: string;
+	voteCount: string;
 };
 
 export type GooglePlace = {

@@ -8,7 +8,7 @@ export default function formatSearchParams(
 	maxTravelDistance: number
 ): GooglePlacesParams {
 	return {
-		restaurantType: topAnswers[0].answer_api_params.category!,
+		restaurantType: topAnswers[0].answerApiParams.category!,
 		latitude: centerLat,
 		longitude: centerLng,
 		radius: maxTravelDistance,
