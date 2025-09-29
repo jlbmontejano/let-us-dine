@@ -142,7 +142,7 @@ export async function createResult(
 			const { centerLat, centerLng, radiusMeters } =
 				calculateWeightedCentroid(locationsArray);
 
-			const topAnswers = await calculateTopAnswers(sessionId);
+			const topAnswers = await calculateTopAnswers(sessionId, tx);
 
 			const searchParams = formatSearchParams(
 				topAnswers,
