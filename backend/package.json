@@ -6,9 +6,9 @@
 		"dev": "nodemon index.ts",
 		"dev:reset": "prisma db push --force-reset",
 		"test": "jest",
-		"build": "npm ci && tsc",
+		"build": "tsc",
 		"seed": "node prisma/seed.js",
-		"start": "node ./dist/index.js"
+		"start": "node dist/index.js"
 	},
 	"author": "",
 	"license": "ISC",
