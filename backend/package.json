@@ -8,7 +8,7 @@
 		"test": "jest",
 		"build": "npm ci && tsc",
 		"seed": "node prisma/seed.js",
-		"start": "node index.js"
+		"start": "node ./dist/index.js"
 	},
 	"author": "",
 	"license": "ISC",
