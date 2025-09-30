@@ -143,10 +143,10 @@
 	}
 
 	.places-list-left-padding {
-		@apply pl-7;
+		@apply ml-7;
 	}
 
 	.places-list-anchor {
-		@apply text-blue-800 hover:cursor-pointer hover:underline;
+		@apply self-start text-blue-800 hover:underline;
 	}
 }

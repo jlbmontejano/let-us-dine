@@ -7,6 +7,9 @@ type TopAnswersProps = {
 const TopAnswers = ({ topAnswers }: TopAnswersProps) => {
 	return (
 		<section className='grid gap-4'>
+			<h2 className='text-center text-xl font-semibold'>
+				Here are the top answers for your session:
+			</h2>
 			{topAnswers.map(
 				({ answerText, questionText, voteCount }: TopAnswer, index) => (
 					<div

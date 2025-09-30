@@ -46,7 +46,6 @@ const ShowResults = ({ sessionId }: ShowResultsProps) => {
 			) : (
 				<PlacesList places={sessionResult.places} />
 			)}
-
 			<TopAnswers topAnswers={sessionResult.topAnswers} />
 		</section>
 	);
