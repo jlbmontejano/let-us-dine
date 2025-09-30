@@ -28,7 +28,7 @@ const Setup = () => {
 		<div className='page-container items-center'>
 			<BackButton className='self-start' />
 			<div>
-				<h1 className='text-2xl font-semibold'>Setup Session</h1>
+				<h1 className='text-2xl font-semibold'>Session Setup</h1>
 				<p className='text-lg'>Choose an option:</p>
 			</div>
 			<div className='flex w-full max-w-xs flex-col gap-2'>
