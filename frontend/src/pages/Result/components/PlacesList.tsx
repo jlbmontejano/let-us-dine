@@ -1,4 +1,4 @@
-import { GooglePlace } from "../../../../../shared/types";
+import { GooglePlace } from "@/types/shared";
 import RestaurantCard from "./RestaurantCard";
 
 type PlacesListProps = {

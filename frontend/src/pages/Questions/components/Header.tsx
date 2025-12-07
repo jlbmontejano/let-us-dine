@@ -1,5 +1,5 @@
 import { Progress } from "@/components/ui/progress";
-import QUESTIONS from "../../../../../shared/constants/questions";
+import QUESTIONS from "@/constants/questions";
 
 type HeaderProps = {
 	currentQuestion: number;

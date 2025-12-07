@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import asyncHandler from "../middleware/asyncHandler";
 import * as QuestionServices from "../services/question.services";
-import { FindQuestionInfo } from "../types";
+import { FindQuestionInfo } from "../types/index";
 import ErrorResponse from "../utils/errorResponse";
 
 //@desc    Get a specific question

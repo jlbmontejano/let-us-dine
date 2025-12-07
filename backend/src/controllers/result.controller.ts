@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import asyncHandler from "../middleware/asyncHandler";
 import * as ResultServices from "../services/result.services";
-import { FindResultInfo } from "../types";
+import { FindResultInfo } from "../types/index";
 import ErrorResponse from "../utils/errorResponse";
 
 //@desc    Get a specific result

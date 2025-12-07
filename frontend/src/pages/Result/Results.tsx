@@ -3,10 +3,10 @@ import { useToast } from "@/hooks/use-toast";
 import { useGetSession } from "@/lib/react-query/queries";
 import ShowProgress from "@/pages/Result/components/ShowProgress";
 import ShowResults from "@/pages/Result/components/ShowResults";
+import ErrorPage from "@/pages/StateManage/ErrorPage";
 import Loader from "@/pages/StateManage/Loader";
-import { useNavigate, useParams } from "react-router-dom";
-import ErrorPage from "../StateManage/ErrorPage";
 import { useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 const Results = () => {
 	const navigate = useNavigate();

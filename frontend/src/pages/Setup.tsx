@@ -3,7 +3,7 @@ import CheckResults from "@/components/shared/SessionForms/CheckResults";
 import CreateSession from "@/components/shared/SessionForms/CreateSession";
 import JoinSession from "@/components/shared/SessionForms/JoinSession";
 import { Button } from "@/components/ui/button";
-import { SessionType } from "@/types";
+import { SessionType } from "@/types/index";
 import { useIsMutating } from "@tanstack/react-query";
 import { useState } from "react";
 

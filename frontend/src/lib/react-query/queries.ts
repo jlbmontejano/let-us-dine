@@ -1,10 +1,10 @@
 import { useToast } from "@/hooks/use-toast";
+import { SessionResult, SessionStatus } from "@/types/index";
+import { CreateSessionResultBody } from "@/types/shared";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import { CreateSessionResultBody } from "../../../../shared/types";
 import apiFetch from "./apiFetch";
 import QUERY_KEYS from "./queryKeys";
-import { SessionResult, SessionStatus } from "@/types";
 
 export const useCreateSession = () => {
 	const queryClient = useQueryClient();

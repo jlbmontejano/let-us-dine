@@ -1,5 +1,5 @@
 import { Prisma } from "@prisma/client";
-import { TopAnswer } from "../../../shared/types";
+import { TopAnswer } from "../types/shared";
 
 export default async function calculateTopAnswers(
 	id: string,

@@ -1,4 +1,4 @@
-import QUESTIONS from "../../shared/constants/questions";
+import QUESTIONS from "../src/constants/questions";
 import prisma from "./prismaClient";
 
 async function main() {

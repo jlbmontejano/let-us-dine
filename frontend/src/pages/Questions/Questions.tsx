@@ -7,21 +7,18 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import QUESTIONS from "@/constants/questions";
 import { useUserLocation } from "@/context/user-location";
 import { useToast } from "@/hooks/use-toast";
 import { useCreateResults } from "@/lib/react-query/queries";
 import ButtonNavigation from "@/pages/Questions/components/ButtonNavigation";
 import Header from "@/pages/Questions/components/Header";
+import ErrorPage from "@/pages/StateManage/ErrorPage";
 import Loader from "@/pages/StateManage/Loader";
+import { CreateSessionResultBody, QuestionData } from "@/types/shared";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
-import QUESTIONS from "../../../../shared/constants/questions";
-import {
-	CreateSessionResultBody,
-	QuestionData,
-} from "../../../../shared/types/index";
-import ErrorPage from "../StateManage/ErrorPage";
 
 const Questions = () => {
 	const { toast } = useToast();

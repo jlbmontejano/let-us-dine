@@ -1,4 +1,6 @@
 import { Button } from "@/components/ui/button";
+import { GooglePlace } from "@/types/shared";
+import { useState } from "react";
 import {
 	FaCalendarAlt,
 	FaPhoneAlt,
@@ -8,8 +10,6 @@ import {
 } from "react-icons/fa";
 import { FaLocationDot, FaMoneyBill1Wave } from "react-icons/fa6";
 import { TbWorld } from "react-icons/tb";
-import { GooglePlace } from "../../../../../shared/types";
-import { useState } from "react";
 
 type RestaurantCardProps = {
 	place: GooglePlace;

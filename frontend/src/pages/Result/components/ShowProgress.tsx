@@ -1,5 +1,5 @@
 import ShareId from "@/components/shared/ShareId";
-import { SessionStatus } from "@/types";
+import { SessionStatus } from "@/types/index";
 
 type ShowProgressProps = {
 	sessionStatus: SessionStatus;

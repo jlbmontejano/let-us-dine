@@ -1,4 +1,4 @@
-import { GooglePlace, TopAnswer } from "../../../shared/types";
+import { GooglePlace, TopAnswer } from "./shared";
 
 export type SessionType = "join" | "create" | "check" | "error" | null;
 

@@ -1,5 +1,5 @@
 import prisma from "../../prisma/prismaClient";
-import { FindResultInfo } from "../types";
+import { FindResultInfo } from "../types/index";
 
 export async function findById(id: string): Promise<FindResultInfo | null> {
 	return prisma.result.findUnique({

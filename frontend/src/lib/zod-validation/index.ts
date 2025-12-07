@@ -1,5 +1,5 @@
+import QUESTIONS from "@/constants/questions";
 import { z } from "zod";
-import QUESTIONS from "../../../../shared/constants/questions";
 
 export const createSessionSchema = z.object({
 	totalParticipants: z.coerce

@@ -1,4 +1,4 @@
-import { TopAnswer } from "../../../../../shared/types";
+import { TopAnswer } from "@/types/shared";
 
 type TopAnswersProps = {
 	topAnswers: TopAnswer[];

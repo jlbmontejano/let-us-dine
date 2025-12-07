@@ -1,7 +1,7 @@
 import BackButton from "@/components/shared/BackButton";
 import { Button } from "@/components/ui/button";
+import QUESTIONS from "@/constants/questions";
 import React from "react";
-import QUESTIONS from "../../../../../shared/constants/questions";
 
 type ButtonNavigationProps = {
 	currentQuestion: number;

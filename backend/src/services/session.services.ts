@@ -1,7 +1,7 @@
-import QUESTIONS from "../../../shared/constants/questions";
-import { QuestionData } from "../../../shared/types";
 import prisma from "../../prisma/prismaClient";
-import { PostFormatLocation, PreFormatLocation } from "../types";
+import QUESTIONS from "../constants/questions";
+import { PostFormatLocation, PreFormatLocation } from "../types/index";
+import { QuestionData } from "../types/shared";
 import buildLocationsArray from "../utils/buildLocationsArray";
 import calculateTopAnswers from "../utils/calculateTopAnswers";
 import calculateWeightedCentroid from "../utils/calculateWeightedCentroid";
