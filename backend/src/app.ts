@@ -6,7 +6,6 @@ import sessionRoutes from "../src/routes/session.routes";
 import errorHandler from "./middleware/errorHandler";
 import answersRoutes from "./routes/answer.routes";
 import questionsRoutes from "./routes/question.routes";
-import path from "path";
 
 const app = express();
 
@@ -19,7 +18,7 @@ const limiter = rateLimit({
 });
 
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "../frontend/build")));
+app.set("trust proxy", 1);
 app.use(
 	cors({
 		origin: process.env.FRONTEND_URL,
