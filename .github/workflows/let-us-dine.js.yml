@@ -38,13 +38,13 @@ jobs:
 
             # Upload artifacts so deploy job can download them
             - name: Upload backend build
-              uses: actions/upload-artifact@v3
+              uses: actions/upload-artifact@v4
               with:
                   name: backend-dist
                   path: backend/dist
 
             - name: Upload frontend build
-              uses: actions/upload-artifact@v3
+              uses: actions/upload-artifact@v4
               with:
                   name: frontend-dist
                   path: frontend/dist
@@ -56,13 +56,13 @@ jobs:
 
         steps:
             - name: Download backend artifact
-              uses: actions/download-artifact@v3
+              uses: actions/download-artifact@v4
               with:
                   name: backend-dist
                   path: backend/dist
 
             - name: Download frontend artifact
-              uses: actions/download-artifact@v3
+              uses: actions/download-artifact@v4
               with:
                   name: frontend-dist
                   path: frontend/dist
