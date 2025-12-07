@@ -1,4 +1,4 @@
-name: Let-Us-Dine.js CI
+name: Let-Us-Dine CI/CD
 
 on:
     push:
@@ -7,23 +7,33 @@ on:
         branches: [main]
 
 jobs:
-    build:
+    build-and-deploy:
         runs-on: self-hosted
 
         steps:
-            - uses: actions/checkout@v2
-            - name: Use Node.js ${{ matrix.node-version}}
-              uses: actions/setup-node@v1
+            - name: Checkout repo
+              uses: actions/checkout@v4
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v4
               with:
-                  node-version: ${{ matrix.node-version}}
-            - run: |
+                  node-version: 18
+
+            - name: Build backend
+              run: |
                   cd backend
-                  npm i
-                  cd ../frontend
-                  npm i
+                  npm install
                   npm run build
-                  cd ..
-                  pm2 stop 0
-                  pm2 start 0
+
+            - name: Build frontend
+              run: |
+                  cd frontend
+                  npm install
+                  npm run build
+
+            - name: Restart PM2 and Nginx
+              run: |
+                  pm2 stop 1 || true
+                  pm2 start 1
                   pm2 save
                   sudo service nginx restart
