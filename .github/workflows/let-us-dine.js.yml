@@ -1,63 +1,101 @@
-name: Let-Us-Dine CI/CD
+name: Deploy Let-Us-Dine
 
 on:
     push:
-        branches: [main]
-    pull_request:
-        branches: [main]
+        branches: ["main"]
 
-# ------------------------------
-# Job 1: Build the frontend on GitHub
-# ------------------------------
 jobs:
-    build-frontend:
+    build:
+        name: Build App
         runs-on: ubuntu-latest
 
         steps:
-            - uses: actions/checkout@v4
+            - name: Checkout repository
+              uses: actions/checkout@v3
 
-            - name: Set up Node.js
-              uses: actions/setup-node@v4
+            - name: Setup Node
+              uses: actions/setup-node@v3
               with:
                   node-version: 18
 
-            - name: Install & build frontend
-              run: |
-                  cd frontend
-                  npm install
-                  npm run build
-
-            - name: Upload built frontend
-              uses: actions/upload-artifact@v4
-              with:
-                  name: frontend-dist
-                  path: frontend/dist
-
-    # ------------------------------
-    # Job 2: Deploy on your self-hosted runner
-    # ------------------------------
-    deploy:
-        runs-on: self-hosted
-        needs: build-frontend
-
-        steps:
-            - uses: actions/checkout@v4
-
-            - name: Download built frontend
-              uses: actions/download-artifact@v4
-              with:
-                  name: frontend-dist
-                  path: frontend/dist
+            # BACKEND BUILD
+            - name: Install backend dependencies
+              working-directory: backend
+              run: npm ci
 
             - name: Build backend
-              run: |
-                  cd backend
-                  npm install
-                  npm run build
+              working-directory: backend
+              run: npm run build
 
-            - name: Restart services
-              run: |
-                  pm2 stop backend || true
-                  pm2 start backend
-                  pm2 save
-                  sudo service nginx restart
+            # FRONTEND BUILD
+            - name: Install frontend dependencies
+              working-directory: frontend
+              run: npm ci
+
+            - name: Build frontend
+              working-directory: frontend
+              run: npm run build
+
+            # Upload artifacts so deploy job can download them
+            - name: Upload backend build
+              uses: actions/upload-artifact@v3
+              with:
+                  name: backend-dist
+                  path: backend/dist
+
+            - name: Upload frontend build
+              uses: actions/upload-artifact@v3
+              with:
+                  name: frontend-dist
+                  path: frontend/dist
+
+    deploy:
+        name: Deploy to Droplet
+        needs: build
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Download backend artifact
+              uses: actions/download-artifact@v3
+              with:
+                  name: backend-dist
+                  path: backend/dist
+
+            - name: Download frontend artifact
+              uses: actions/download-artifact@v3
+              with:
+                  name: frontend-dist
+                  path: frontend/dist
+
+            - name: Deploy via SSH
+              uses: appleboy/scp-action@v0.1.7
+              with:
+                  host: ${{ secrets.DROPLET_HOST }}
+                  username: ${{ secrets.DROPLET_USER }}
+                  key: ${{ secrets.DROPLET_SSH_KEY }}
+                  source: "backend/dist,frontend/dist"
+                  target: "/var/www/lud/_work/let-us-dine/let-us-dine"
+
+            - name: Execute remote SSH commands
+              uses: appleboy/ssh-action@v0.1.10
+              with:
+                  host: ${{ secrets.DROPLET_HOST }}
+                  username: ${{ secrets.DROPLET_USER }}
+                  key: ${{ secrets.DROPLET_SSH_KEY }}
+                  script: |
+                      cd /var/www/lud/_work/let-us-dine/let-us-dine/backend
+
+                      # Install production deps
+                      npm ci --omit=dev
+
+                      # Prisma: generate + migrate + seed (optional)
+                      npx prisma generate
+                      npx prisma migrate deploy
+
+                      # Restart PM2
+                      pm2 stop ecosystem.config.js || true
+                      pm2 start ecosystem.config.js
+                      pm2 save
+
+                      # Restart Nginx
+                      sudo systemctl restart nginx
