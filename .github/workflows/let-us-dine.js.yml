@@ -6,18 +6,48 @@ on:
     pull_request:
         branches: [main]
 
+# ------------------------------
+# Job 1: Build the frontend on GitHub
+# ------------------------------
 jobs:
-    build-and-deploy:
-        runs-on: self-hosted
+    build-frontend:
+        runs-on: ubuntu-latest
 
         steps:
-            - name: Checkout repo
-              uses: actions/checkout@v4
+            - uses: actions/checkout@v4
 
             - name: Set up Node.js
               uses: actions/setup-node@v4
               with:
                   node-version: 18
+
+            - name: Install & build frontend
+              run: |
+                  cd frontend
+                  npm install
+                  npm run build
+
+            - name: Upload built frontend
+              uses: actions/upload-artifact@v4
+              with:
+                  name: frontend-dist
+                  path: frontend/dist
+
+    # ------------------------------
+    # Job 2: Deploy on your self-hosted runner
+    # ------------------------------
+    deploy:
+        runs-on: self-hosted
+        needs: build-frontend
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Download built frontend
+              uses: actions/download-artifact@v4
+              with:
+                  name: frontend-dist
+                  path: frontend/dist
 
             - name: Build backend
               run: |
@@ -25,15 +55,9 @@ jobs:
                   npm install
                   npm run build
 
-            - name: Build frontend
+            - name: Restart services
               run: |
-                  cd frontend
-                  npm install
-                  npm run build
-
-            - name: Restart PM2 and Nginx
-              run: |
-                  pm2 stop 1 || true
-                  pm2 start 1
+                  pm2 stop backend || true
+                  pm2 start backend
                   pm2 save
                   sudo service nginx restart
