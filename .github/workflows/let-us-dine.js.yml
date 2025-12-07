@@ -12,6 +12,13 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v3
 
+            - name: Set environment variables
+              run: |
+                  echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> $GITHUB_ENV
+                  echo "ADMIN_API_KEY=${{ secrets.ADMIN_API_KEY }}" >> $GITHUB_ENV
+                  echo "GOOGLE_PLACES_API_KEY=${{ secrets.GOOGLE_PLACES_API_KEY }}" >> $GITHUB_ENV
+                  echo "FRONTEND_URL=${{ secrets.FRONTEND_URL }}" >> $GITHUB_ENV
+
             - name: Deploy Backend
               working-directory: ./backend
               run: |
