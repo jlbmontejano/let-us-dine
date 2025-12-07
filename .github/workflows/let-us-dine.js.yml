@@ -15,7 +15,7 @@ jobs:
             - name: Deploy Backend
               working-directory: ./backend
               run: |
-                  npm ci
+                  npm i
                   npx prisma generate
                   npx prisma migrate deploy
                   npm run build
@@ -27,7 +27,7 @@ jobs:
             - name: Deploy Frontend
               working-directory: ./frontend
               run: |
-                  npm ci
+                  npm i
                   npm run build
 
             - name: Reload nginx
