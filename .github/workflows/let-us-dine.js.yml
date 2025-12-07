@@ -5,97 +5,30 @@ on:
         branches: ["main"]
 
 jobs:
-    build:
-        name: Build App
-        runs-on: ubuntu-latest
+    deploy:
+        runs-on: self-hosted
 
         steps:
-            - name: Checkout repository
+            - name: Checkout code
               uses: actions/checkout@v3
 
-            - name: Setup Node
-              uses: actions/setup-node@v3
-              with:
-                  node-version: 18
+            - name: Deploy Backend
+              working-directory: ./backend
+              run: |
+                  npm ci
+                  npx prisma generate
+                  npx prisma migrate deploy
+                  npm run build
 
-            # BACKEND BUILD
-            - name: Install backend dependencies
-              working-directory: backend
-              run: npm ci
+            - name: Restart Backend
+              working-directory: ./backend
+              run: pm2 restart backend || pm2 start ecosystem.config.js
 
-            - name: Build backend
-              working-directory: backend
-              run: npm run build
+            - name: Deploy Frontend
+              working-directory: ./frontend
+              run: |
+                  npm ci
+                  npm run build
 
-            # FRONTEND BUILD
-            - name: Install frontend dependencies
-              working-directory: frontend
-              run: npm ci
-
-            - name: Build frontend
-              working-directory: frontend
-              run: npm run build
-
-            # Upload artifacts so deploy job can download them
-            - name: Upload backend build
-              uses: actions/upload-artifact@v4
-              with:
-                  name: backend-dist
-                  path: backend/dist
-
-            - name: Upload frontend build
-              uses: actions/upload-artifact@v4
-              with:
-                  name: frontend-dist
-                  path: frontend/dist
-
-    deploy:
-        name: Deploy to Droplet
-        needs: build
-        runs-on: ubuntu-latest
-
-        steps:
-            - name: Download backend artifact
-              uses: actions/download-artifact@v4
-              with:
-                  name: backend-dist
-                  path: backend/dist
-
-            - name: Download frontend artifact
-              uses: actions/download-artifact@v4
-              with:
-                  name: frontend-dist
-                  path: frontend/dist
-
-            - name: Deploy via SSH
-              uses: appleboy/scp-action@v0.1.7
-              with:
-                  host: ${{ secrets.DROPLET_HOST }}
-                  username: ${{ secrets.DROPLET_USER }}
-                  key: ${{ secrets.DROPLET_SSH_KEY }}
-                  source: "backend/dist,frontend/dist"
-                  target: "/var/www/lud/_work/let-us-dine/let-us-dine"
-
-            - name: Execute remote SSH commands
-              uses: appleboy/ssh-action@v0.1.10
-              with:
-                  host: ${{ secrets.DROPLET_HOST }}
-                  username: ${{ secrets.DROPLET_USER }}
-                  key: ${{ secrets.DROPLET_SSH_KEY }}
-                  script: |
-                      cd /var/www/lud/_work/let-us-dine/let-us-dine/backend
-
-                      # Install production deps
-                      npm ci --omit=dev
-
-                      # Prisma: generate + migrate + seed (optional)
-                      npx prisma generate
-                      npx prisma migrate deploy
-
-                      # Restart PM2
-                      pm2 stop ecosystem.config.js || true
-                      pm2 start ecosystem.config.js
-                      pm2 save
-
-                      # Restart Nginx
-                      sudo systemctl restart nginx
+            - name: Reload nginx
+              run: sudo systemctl reload nginx
