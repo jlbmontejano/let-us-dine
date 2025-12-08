@@ -32,7 +32,7 @@ export const UserLocationProvider = ({
 					setLocationDenied(true);
 				} else {
 					toast({
-						description: "Error getting your position.",
+						description: "Error getting your location.",
 						variant: "destructive",
 					});
 				}
