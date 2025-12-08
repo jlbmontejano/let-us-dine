@@ -4,44 +4,51 @@ on:
     push:
         branches: ["main"]
 
+concurrency:
+    group: production-deploy
+    cancel-in-progress: true
+
 jobs:
     deploy:
         runs-on: self-hosted
+        timeout-minutes: 30
 
         steps:
-            - name: Checkout code
-              uses: actions/checkout@v3
-
-            - name: Set backend env variables
-              working-directory: ./backend
+            - name: Pull latest code
               run: |
-                  echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
-                  echo "ADMIN_API_KEY=${{ secrets.ADMIN_API_KEY }}" >> .env
-                  echo "GOOGLE_PLACES_API_KEY=${{ secrets.GOOGLE_PLACES_API_KEY }}" >> .env
-                  echo "FRONTEND_URL=${{ secrets.FRONTEND_URL }}" >> .env
+                  cd /var/www/lud
+                  git fetch origin
+                  git reset --hard origin/main
+
+            - name: Setup Node
+              uses: actions/setup-node@v3
+              with:
+                  node-version: "18"
 
             - name: Deploy Backend
-              working-directory: ./backend
+              working-directory: /var/www/lud/backend
               run: |
-                  npm i
+                  npm ci --prefer-offline
                   npx prisma generate
                   npx prisma migrate deploy
                   npm run build
 
             - name: Restart Backend
-              working-directory: ./backend
-              run: pm2 restart backend || pm2 start ecosystem.config.js
-
-            - name: Set backend env variables
-              working-directory: ./frontend
+              working-directory: /var/www/lud/backend
               run: |
-                  echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" >> .env
+                  pm2 restart backend || pm2 start ecosystem.config.js
+                  pm2 save
 
             - name: Deploy Frontend
-              working-directory: ./frontend
+              working-directory: /var/www/lud/frontend
               run: |
-                  npm i
+                  npm ci --prefer-offline
                   npm run build
 
             - name: Reload nginx
               run: sudo systemctl reload nginx
+
+            - name: Health Check
+              run: |
+                  sleep 5
+                  curl -f https://letusdine.jorgebuenrostro.com || echo "Site starting..."
