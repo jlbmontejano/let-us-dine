@@ -46,7 +46,7 @@ jobs:
                   npm run build
 
             - name: Reload nginx
-              run: sudo systemctl reload nginx
+              run: systemctl reload nginx
 
             - name: Health Check
               run: |
