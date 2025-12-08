@@ -28,7 +28,7 @@ jobs:
             - name: Deploy Backend
               working-directory: /var/www/let-us-dine/backend
               run: |
-                  npm ci --prefer-offline
+                  npm i
                   npx prisma generate
                   npx prisma migrate deploy
                   npm run build
@@ -42,7 +42,7 @@ jobs:
             - name: Deploy Frontend
               working-directory: /var/www/let-us-dine/frontend
               run: |
-                  npm ci --prefer-offline
+                  npm i
                   npm run build
 
             - name: Reload nginx
