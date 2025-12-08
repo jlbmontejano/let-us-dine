@@ -24,6 +24,23 @@ jobs:
               with:
                   node-version: "18"
 
+            # ---- CREATE BACKEND .env ----
+            - name: Create backend .env file
+              run: |
+                  cat <<EOF > ./backend/.env
+                  DATABASE_URL=${{ secrets.DATABASE_URL }}
+                  ADMIN_API_KEY=${{ secrets.ADMIN_API_KEY }}
+                  GOOGLE_PLACES_API_KEY=${{ secrets.GOOGLE_PLACES_API_KEY }}
+                  FRONTEND_URL=${{ secrets.FRONTEND_URL }}
+                  EOF
+
+            # ---- CREATE FRONTEND .env ----
+            - name: Create backend .env file
+              run: |
+                  cat <<EOF > ./frontend/.env
+                  VITE_API_URL=${{ secrets.VITE_API_URL }}
+                  EOF
+
             # 3. Install + build backend inside workspace
             - name: Install & build backend
               working-directory: ./backend
