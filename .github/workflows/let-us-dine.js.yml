@@ -16,7 +16,7 @@ jobs:
         steps:
             - name: Pull latest code
               run: |
-                  cd /var/www/lud
+                  cd /var/www/let-us-dine
                   git fetch origin
                   git reset --hard origin/main
 
@@ -26,7 +26,7 @@ jobs:
                   node-version: "18"
 
             - name: Deploy Backend
-              working-directory: /var/www/lud/backend
+              working-directory: /var/www/let-us-dine/backend
               run: |
                   npm ci --prefer-offline
                   npx prisma generate
@@ -34,13 +34,13 @@ jobs:
                   npm run build
 
             - name: Restart Backend
-              working-directory: /var/www/lud/backend
+              working-directory: /var/www/let-us-dine/backend
               run: |
                   pm2 restart backend || pm2 start ecosystem.config.js
                   pm2 save
 
             - name: Deploy Frontend
-              working-directory: /var/www/lud/frontend
+              working-directory: /var/www/let-us-dine/frontend
               run: |
                   npm ci --prefer-offline
                   npm run build
@@ -51,4 +51,4 @@ jobs:
             - name: Health Check
               run: |
                   sleep 5
-                  curl -f https://letusdine.jorgebuenrostro.com || echo "Site starting..."
+                  curl -f https://letusdine.jorgebuenrostro.com || echo "Site might still be starting..."
