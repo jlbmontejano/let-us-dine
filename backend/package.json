@@ -8,7 +8,7 @@
 		"test": "jest",
 		"build": "npx prisma generate && tsc",
 		"postinstall": "npx prisma generate",
-		"seed": "node dist/backend/prisma/seed.js",
+		"seed": "node dist/prisma/seed.js",
 		"seed:dev": "ts-node prisma/seed.ts",
 		"start": "node dist/backend/index.js"
 	},
