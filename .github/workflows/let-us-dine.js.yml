@@ -14,40 +14,53 @@ jobs:
         timeout-minutes: 30
 
         steps:
-            - name: Pull latest code
-              run: |
-                  cd /var/www/let-us-dine
-                  git fetch origin
-                  git reset --hard origin/main
+            # 1. Clone repository into runner workspace
+            - name: Checkout repository
+              uses: actions/checkout@v3
 
+            # 2. Setup Node (shared for backend and frontend)
             - name: Setup Node
               uses: actions/setup-node@v3
               with:
                   node-version: "18"
 
-            - name: Deploy Backend
-              working-directory: /var/www/let-us-dine/backend
+            # 3. Install + build backend inside workspace
+            - name: Install & build backend
+              working-directory: ./backend
               run: |
-                  npm i
+                  npm install
                   npx prisma generate
                   npx prisma migrate deploy
                   npm run build
 
-            - name: Restart Backend
-              working-directory: /var/www/let-us-dine/backend
+            # 4. Install + build frontend inside workspace
+            - name: Install & build frontend
+              working-directory: ./frontend
               run: |
+                  npm install
+                  npm run build
+
+            # 5. Sync built files to /var/www/let-us-dine (production directory)
+            - name: Deploy to server directory
+              run: |
+                  sudo rsync -a --delete "$GITHUB_WORKSPACE/" /var/www/let-us-dine/
+
+            # 6. Restart backend with PM2
+            - name: Restart Backend
+              run: |
+                  cd /var/www/let-us-dine/backend
                   pm2 restart backend || pm2 start ecosystem.config.js
                   pm2 save
 
-            - name: Deploy Frontend
-              working-directory: /var/www/let-us-dine/frontend
-              run: |
-                  npm i
-                  npm run build
+            # 7. Validate nginx config BEFORE reload (prevents stuck reloads!)
+            - name: Validate nginx config
+              run: sudo nginx -t
 
+            # 8. Reload nginx safely
             - name: Reload nginx
               run: sudo systemctl reload nginx
 
+            # 9. Health check after deployment
             - name: Health Check
               run: |
                   sleep 5
