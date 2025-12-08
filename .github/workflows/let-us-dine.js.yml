@@ -12,12 +12,13 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v3
 
-            - name: Set environment variables
+            - name: Set backend env variables
+              working-directory: ./backend
               run: |
-                  echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> $GITHUB_ENV
-                  echo "ADMIN_API_KEY=${{ secrets.ADMIN_API_KEY }}" >> $GITHUB_ENV
-                  echo "GOOGLE_PLACES_API_KEY=${{ secrets.GOOGLE_PLACES_API_KEY }}" >> $GITHUB_ENV
-                  echo "FRONTEND_URL=${{ secrets.FRONTEND_URL }}" >> $GITHUB_ENV
+                  echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
+                  echo "ADMIN_API_KEY=${{ secrets.ADMIN_API_KEY }}" >> .env
+                  echo "GOOGLE_PLACES_API_KEY=${{ secrets.GOOGLE_PLACES_API_KEY }}" >> .env
+                  echo "FRONTEND_URL=${{ secrets.FRONTEND_URL }}" >> .env
 
             - name: Deploy Backend
               working-directory: ./backend
@@ -30,6 +31,11 @@ jobs:
             - name: Restart Backend
               working-directory: ./backend
               run: pm2 restart backend || pm2 start ecosystem.config.js
+
+            - name: Set backend env variables
+              working-directory: ./frontend
+              run: |
+                  echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" >> .env
 
             - name: Deploy Frontend
               working-directory: ./frontend
