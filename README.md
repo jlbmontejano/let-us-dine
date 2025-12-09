@@ -5,7 +5,7 @@
 Collaborative dining decision app that takes the guesswork out of choosing where to eat with friends. Users can create a shared session and invite their group using a simple session ID. Each person completes a quick quiz about their dining preferences, and our algorithm manually processes the results from the Google Maps API to generate personalized restaurant recommendations that satisfy the entire group.
 
 ## Live Demo
-[https://let-us-dine-frontend.onrender.com/](https://letusdine.jorgebuenrostro.com)
+[https://letusdine.jorgebuenrostro.com/](https://letusdine.jorgebuenrostro.com)
 
 ## Session Setup Screen
 ![LUD-Setup](https://github.com/user-attachments/assets/2c9db5da-4307-4a3e-bbc2-3a347bfeea36)
