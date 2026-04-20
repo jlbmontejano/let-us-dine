@@ -37,6 +37,11 @@ jobs:
                      echo 'POSTGRES_USER=${{ secrets.POSTGRES_USER }}' > /app/.env && \
                      echo 'POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}' >> /app/.env && \
                      echo 'POSTGRES_DB=${{ secrets.POSTGRES_DB }}' >> /app/.env && \
+                     echo 'DATABASE_URL=${{ secrets.DATABASE_URL }}' >> /app/.env && \
+                     echo 'GOOGLE_PLACES_API_KEY=${{ secrets.GOOGLE_PLACES_API_KEY }}' >> /app/.env && \
+                     echo 'ADMIN_API_KEY=${{ secrets.ADMIN_API_KEY }}' >> /app/.env && \
+                     echo 'FRONTEND_URL=${{ secrets.FRONTEND_URL }}' >> /app/.env && \
+                     echo 'PORT=8080' >> /app/.env && \
                      cd /app && \
                      docker compose pull && \
                      docker compose up -d"
