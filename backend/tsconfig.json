@@ -10,6 +10,6 @@
 		"skipLibCheck": true,
 		"resolveJsonModule": true
 	},
-	"include": ["src/**/*", "index.ts"],
+	"include": ["src/**/*", "index.ts", "prisma/**/*"],
 	"exclude": ["node_modules", "dist"]
 }

@@ -1,5 +1,6 @@
 import cors from "cors";
 import express from "express";
+import path from "path";
 import rateLimit from "express-rate-limit";
 import resultRoutes from "../src/routes/result.routes";
 import sessionRoutes from "../src/routes/session.routes";
@@ -22,9 +23,11 @@ app.set("trust proxy", 1);
 app.use(
 	cors({
 		origin: process.env.FRONTEND_URL,
-	})
+	}),
 );
 app.use(limiter);
+
+app.use(express.static(path.join(process.cwd(), "public")));
 
 app.use("/results", resultRoutes);
 app.use("/sessions", sessionRoutes);
@@ -32,5 +35,9 @@ app.use("/answers", answersRoutes);
 app.use("/questions", questionsRoutes);
 
 app.use(errorHandler);
+
+app.get("*", (req, res) => {
+	res.sendFile(path.join(process.cwd(), "public", "index.html"));
+});
 
 export default app;

@@ -3,6 +3,13 @@ import prisma from "./prismaClient";
 
 async function main() {
 	try {
+		const existingQuestions = await prisma.question.count();
+
+		if (existingQuestions > 0) {
+			console.log("Las preguntas ya existen, saltando este paso...");
+			return;
+		}
+
 		for (const question of QUESTIONS) {
 			const createdQuestion = await prisma.question.create({
 				data: {
@@ -25,6 +32,8 @@ async function main() {
 				});
 			}
 		}
+
+		console.log("Preguntas creadas exitosamente.");
 	} catch (error) {
 		console.log("Error creando preguntas", error);
 	}

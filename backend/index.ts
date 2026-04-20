@@ -5,8 +5,8 @@ import prisma from "./prisma/prismaClient";
 import app from "./src/app";
 
 async function main() {
-	app.listen(3000);
-	console.log("Server is listening on port", 3000);
+	const port = process.env.PORT || 8080;
+	app.listen(port, () => console.log(`Server is listening on ${port}`));
 }
 
 main()
