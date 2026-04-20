@@ -1,9 +1,6 @@
 # Environment files
 .env
 
-# Docker
-.dockerignore
-
 # Dependencies
 node_modules
 **/node_modules
