@@ -1,10 +1,10 @@
 import { Router } from "express";
 import {
-	createSession,
-	createSessionResult,
-	getSession,
-	getSessionResults,
-	getSessions,
+  createSession,
+  createSessionResult,
+  getSession,
+  getSessionResults,
+  getSessions,
 } from "../controllers/session.controller";
 import requireApiKey from "../middleware/requireKey";
 import validateParams from "../middleware/validateParams";

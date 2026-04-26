@@ -12,155 +12,153 @@ import searchPlaces from "../utils/searchPlaces";
 const RADIUS_QUESTION = QUESTIONS[2].text;
 
 export async function create(uuid: string, totalParticipants: number) {
-	return prisma.session.create({
-		data: {
-			uuid,
-			currentParticipants: 0,
-			totalParticipants,
-		},
-		select: { uuid: true },
-	});
+  return prisma.session.create({
+    data: {
+      uuid,
+      currentParticipants: 0,
+      totalParticipants,
+    },
+    select: { uuid: true },
+  });
 }
 
 export async function findById(id: string) {
-	return prisma.session.findUnique({
-		where: {
-			uuid: id,
-		},
-		select: {
-			uuid: true,
-			isActive: true,
-			currentParticipants: true,
-			totalParticipants: true,
-		},
-	});
+  return prisma.session.findUnique({
+    where: {
+      uuid: id,
+    },
+    select: {
+      uuid: true,
+      isActive: true,
+      currentParticipants: true,
+      totalParticipants: true,
+    },
+  });
 }
 
 export async function findAll() {
-	return prisma.session.findMany();
+  return prisma.session.findMany();
 }
 
 export async function createResult(
-	sessionId: string,
-	questionnaireData: QuestionData[],
-	userLocation: GeolocationCoordinates
+  sessionId: string,
+  questionnaireData: QuestionData[],
+  userLocation: GeolocationCoordinates,
 ) {
-	return prisma.$transaction(async (tx: any) => {
-		const createdResults = [];
+  return prisma.$transaction(async (tx: any) => {
+    const createdResults = [];
 
-		for (let i = 0; i < questionnaireData.length; i++) {
-			const result = questionnaireData[i];
+    for (let i = 0; i < questionnaireData.length; i++) {
+      const result = questionnaireData[i];
 
-			const question = await tx.question.findUnique({
-				where: { text: result.questionText },
-			});
+      const question = await tx.question.findUnique({
+        where: { text: result.questionText },
+      });
 
-			if (!question) {
-				throw new ErrorResponse("Question not found", 404);
-			}
+      if (!question) {
+        throw new ErrorResponse("Question not found", 404);
+      }
 
-			const answer = await tx.answer.findUnique({
-				where: {
-					text: result.answerText,
-				},
-			});
+      const answer = await tx.answer.findUnique({
+        where: {
+          text: result.answerText,
+        },
+      });
 
-			if (!answer) {
-				throw new ErrorResponse("Answer not found", 404);
-			}
+      if (!answer) {
+        throw new ErrorResponse("Answer not found", 404);
+      }
 
-			const createdResult = await tx.result.create({
-				data: {
-					session: { connect: { uuid: sessionId } },
-					question: { connect: { id: question.id } },
-					answer: { connect: { id: answer.id } },
-					latitude: userLocation.latitude,
-					longitude: userLocation.longitude,
-				},
-			});
+      const createdResult = await tx.result.create({
+        data: {
+          session: { connect: { uuid: sessionId } },
+          question: { connect: { id: question.id } },
+          answer: { connect: { id: answer.id } },
+          latitude: userLocation.latitude,
+          longitude: userLocation.longitude,
+        },
+      });
 
-			createdResults.push(createdResult);
-		}
+      createdResults.push(createdResult);
+    }
 
-		// Increment currentParticipants by 1
-		const updatedSession = await tx.session.update({
-			where: { uuid: sessionId },
-			data: {
-				currentParticipants: {
-					increment: 1,
-				},
-			},
-		});
+    // Increment currentParticipants by 1
+    const updatedSession = await tx.session.update({
+      where: { uuid: sessionId },
+      data: {
+        currentParticipants: {
+          increment: 1,
+        },
+      },
+    });
 
-		// Mark as inactive if needed and proceed to calculate session's results
-		if (
-			updatedSession.currentParticipants >=
-			updatedSession.totalParticipants
-		) {
-			await tx.session.update({
-				where: { uuid: sessionId },
-				data: { isActive: false },
-			});
+    // Mark as inactive if needed and proceed to calculate session's results
+    if (
+      updatedSession.currentParticipants >= updatedSession.totalParticipants
+    ) {
+      await tx.session.update({
+        where: { uuid: sessionId },
+        data: { isActive: false },
+      });
 
-			// Fetch all users' lat, long and maxTravelDistance
-			const usersLocations: PreFormatLocation[] =
-				await tx.result.findMany({
-					where: {
-						sessionUuid: sessionId,
-						question: {
-							text: RADIUS_QUESTION,
-						},
-					},
-					select: {
-						latitude: true,
-						longitude: true,
-						answer: { select: { apiParams: true } },
-					},
-				});
+      // Fetch all users' lat, long and maxTravelDistance
+      const usersLocations: PreFormatLocation[] = await tx.result.findMany({
+        where: {
+          sessionUuid: sessionId,
+          question: {
+            text: RADIUS_QUESTION,
+          },
+        },
+        select: {
+          latitude: true,
+          longitude: true,
+          answer: { select: { apiParams: true } },
+        },
+      });
 
-			// Build necessary object for calculateWeightedCentroid function
-			const locationsArray: PostFormatLocation[] =
-				buildLocationsArray(usersLocations);
+      // Build necessary object for calculateWeightedCentroid function
+      const locationsArray: PostFormatLocation[] =
+        buildLocationsArray(usersLocations);
 
-			// Calculate weighted centroid before updating session
-			const { centerLat, centerLng, radiusMeters } =
-				calculateWeightedCentroid(locationsArray);
+      // Calculate weighted centroid before updating session
+      const { centerLat, centerLng, radiusMeters } =
+        calculateWeightedCentroid(locationsArray);
 
-			const topAnswers = await calculateTopAnswers(sessionId, tx);
+      const topAnswers = await calculateTopAnswers(sessionId, tx);
 
-			const searchParams = formatSearchParams(
-				topAnswers,
-				centerLat,
-				centerLng,
-				radiusMeters
-			);
+      const searchParams = formatSearchParams(
+        topAnswers,
+        centerLat,
+        centerLng,
+        radiusMeters,
+      );
 
-			const googlePlaces = await searchPlaces(topAnswers, searchParams);
+      const googlePlaces = await searchPlaces(topAnswers, searchParams);
 
-			console.log("googlePlace after filtering: ", googlePlaces.length);
+      console.log("googlePlace after filtering: ", googlePlaces.length);
 
-			await tx.completedSession.create({
-				data: {
-					centerLat,
-					centerLng,
-					radiusMeters,
-					topAnswers,
-					places: googlePlaces,
-					session: { connect: { uuid: sessionId } },
-				},
-			});
-		}
-	});
+      await tx.completedSession.create({
+        data: {
+          centerLat,
+          centerLng,
+          radiusMeters,
+          topAnswers,
+          places: googlePlaces,
+          session: { connect: { uuid: sessionId } },
+        },
+      });
+    }
+  });
 }
 
 export async function findResultsById(id: string) {
-	return prisma.completedSession.findUnique({
-		where: {
-			sessionUuid: id,
-		},
-		select: {
-			places: true,
-			topAnswers: true,
-		},
-	});
+  return prisma.completedSession.findUnique({
+    where: {
+      sessionUuid: id,
+    },
+    select: {
+      places: true,
+      topAnswers: true,
+    },
+  });
 }

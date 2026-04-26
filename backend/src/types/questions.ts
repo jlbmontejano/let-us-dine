@@ -15,12 +15,12 @@ type RatingQuestion = { text: string; answers: RatingAnswer[] };
 type BeverageQuestion = { text: string; answers: BeverageAnswer[] };
 
 type Question =
-	| CuisineQuestion
-	| PriceQuestion
-	| DistanceQuestion
-	| MealQuestion
-	| VibeQuestion
-	| RatingQuestion
-	| BeverageQuestion;
+  | CuisineQuestion
+  | PriceQuestion
+  | DistanceQuestion
+  | MealQuestion
+  | VibeQuestion
+  | RatingQuestion
+  | BeverageQuestion;
 
 export default Question;

@@ -11,19 +11,19 @@ import questionsRoutes from "./routes/question.routes";
 const app = express();
 
 const limiter = rateLimit({
-	windowMs: 10 * 60 * 1000,
-	limit: 100,
-	standardHeaders: "draft-8",
-	legacyHeaders: false,
-	ipv6Subnet: 56,
+  windowMs: 10 * 60 * 1000,
+  limit: 100,
+  standardHeaders: "draft-8",
+  legacyHeaders: false,
+  ipv6Subnet: 56,
 });
 
 app.use(express.json());
 app.set("trust proxy", 1);
 app.use(
-	cors({
-		origin: process.env.FRONTEND_URL,
-	}),
+  cors({
+    origin: process.env.FRONTEND_URL,
+  }),
 );
 app.use(limiter);
 
@@ -37,7 +37,7 @@ app.use("/questions", questionsRoutes);
 app.use(errorHandler);
 
 app.get("*", (req, res) => {
-	res.sendFile(path.join(process.cwd(), "public", "index.html"));
+  res.sendFile(path.join(process.cwd(), "public", "index.html"));
 });
 
 export default app;

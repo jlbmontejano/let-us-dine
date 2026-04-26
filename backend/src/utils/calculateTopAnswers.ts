@@ -2,10 +2,10 @@ import { Prisma } from "@prisma/client";
 import { TopAnswer } from "../types/shared";
 
 export default async function calculateTopAnswers(
-	id: string,
-	txClient: Prisma.TransactionClient
+  id: string,
+  txClient: Prisma.TransactionClient,
 ): Promise<TopAnswer[]> {
-	return txClient.$queryRaw<TopAnswer[]>`
+  return txClient.$queryRaw<TopAnswer[]>`
   		WITH AnswerCounts AS 
   		(
   		  SELECT

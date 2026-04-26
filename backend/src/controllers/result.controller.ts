@@ -8,28 +8,28 @@ import ErrorResponse from "../utils/errorResponse";
 //@route   GET /results/:id
 //@access  Admin
 export const getResult = asyncHandler(
-	async (req: Request, res: Response, next: NextFunction) => {
-		const { id } = req.params;
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params;
 
-		const result: FindResultInfo | null = await ResultServices.findById(id);
+    const result: FindResultInfo | null = await ResultServices.findById(id);
 
-		if (!result) {
-			throw new ErrorResponse("Result not found.", 404);
-		}
+    if (!result) {
+      throw new ErrorResponse("Result not found.", 404);
+    }
 
-		return res.status(200).json({ success: true, data: result });
-	}
+    return res.status(200).json({ success: true, data: result });
+  },
 );
 
 //@desc    Get all results
 //@route   GET /results
 //@access  Admin
 export const getResults = asyncHandler(
-	async (req: Request, res: Response, next: NextFunction) => {
-		const results: FindResultInfo[] = await ResultServices.findAll();
+  async (req: Request, res: Response, next: NextFunction) => {
+    const results: FindResultInfo[] = await ResultServices.findAll();
 
-		return res
-			.status(200)
-			.json({ success: true, data: results, count: results.length });
-	}
+    return res
+      .status(200)
+      .json({ success: true, data: results, count: results.length });
+  },
 );

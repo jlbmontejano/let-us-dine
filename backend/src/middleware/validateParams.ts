@@ -4,15 +4,15 @@ import { checkParamsSchema } from "../utils/zod-validation/schemas";
 import asyncHandler from "./asyncHandler";
 
 const validateParams = asyncHandler(
-	async (req: Request, res: Response, next: NextFunction) => {
-		const idValidation = checkParamsSchema.safeParse(req.params);
+  async (req: Request, res: Response, next: NextFunction) => {
+    const idValidation = checkParamsSchema.safeParse(req.params);
 
-		if (!idValidation.success) {
-			return next(new ErrorResponse("Error validando ID.", 400));
-		}
+    if (!idValidation.success) {
+      return next(new ErrorResponse("Error validando ID.", 400));
+    }
 
-		next();
-	}
+    next();
+  },
 );
 
 export default validateParams;

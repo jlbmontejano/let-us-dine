@@ -1,19 +1,19 @@
 import { PostFormatLocation, PreFormatLocation } from "../types/index";
 
 export default function buildLocationsArray(
-	usersLocations: PreFormatLocation[]
+  usersLocations: PreFormatLocation[],
 ): PostFormatLocation[] {
-	return usersLocations.map(user => {
-		const apiParams = user.answer.apiParams as {
-			maxTravelDistance: number;
-		};
+  return usersLocations.map((user) => {
+    const apiParams = user.answer.apiParams as {
+      maxTravelDistance: number;
+    };
 
-		const { maxTravelDistance } = apiParams;
+    const { maxTravelDistance } = apiParams;
 
-		return {
-			latitude: user.latitude,
-			longitude: user.longitude,
-			maxTravelDistance: Number(JSON.stringify(maxTravelDistance)),
-		};
-	});
+    return {
+      latitude: user.latitude,
+      longitude: user.longitude,
+      maxTravelDistance: Number(JSON.stringify(maxTravelDistance)),
+    };
+  });
 }
