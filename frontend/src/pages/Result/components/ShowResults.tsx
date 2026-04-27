@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import NoResults from "./NoResults";
 import PlacesList from "./PlacesList";
 import TopAnswers from "./TopAnswers";
+import Loader from "@/pages/StateManage/Loader";
 
 type ShowResultsProps = {
 	sessionId: string;
@@ -14,34 +15,30 @@ const ShowResults = ({ sessionId }: ShowResultsProps) => {
 	const { toast } = useToast();
 	const {
 		data: sessionResult,
-		isError: resultsError,
-		isPending: resultsPending,
-	} = useGetResults(sessionId!);
+		isError,
+		isPending,
+	} = useGetResults(sessionId);
 
 	useEffect(() => {
-		if (!sessionId || resultsError) {
+		if (isError) {
 			toast({
 				description: "Error fetching session data",
 				variant: "destructive",
 			});
 		}
-	}, [sessionId, resultsError, toast]);
+	}, [isError, toast]);
 
-	if (resultsError) {
+	if (isError) {
 		return <ErrorPage />;
 	}
 
-	if (resultsPending) {
-		return (
-			<section className='flex w-full items-center justify-center'>
-				<p className='helper-container-title'>Loading...</p>
-			</section>
-		);
+	if (isPending) {
+		return <Loader text='Loading results...' />;
 	}
 
 	return (
 		<section className='flex flex-col gap-4'>
-			{Object.entries(sessionResult.places ?? []).length === 0 ? (
+			{Object.keys(sessionResult.places ?? []).length === 0 ? (
 				<NoResults />
 			) : (
 				<PlacesList places={sessionResult.places} />
