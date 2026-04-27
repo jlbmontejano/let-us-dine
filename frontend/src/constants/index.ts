@@ -1,4 +1,6 @@
-export const CAROUSEL_IMAGES = [
+import { SessionType } from "@/types";
+
+export const CAROUSEL_IMAGES: { src: string; alt: string }[] = [
 	{
 		src: "images/fruit.webp",
 		alt: "fruit",
@@ -31,4 +33,10 @@ export const CAROUSEL_IMAGES = [
 		src: "images/tiramisu.webp",
 		alt: "tiramisu",
 	},
+];
+
+export const SESSION_OPTIONS: { label: string; type: SessionType }[] = [
+	{ label: "Create a Session", type: "create" },
+	{ label: "Join a Session", type: "join" },
+	{ label: "Check Results", type: "check" },
 ];
