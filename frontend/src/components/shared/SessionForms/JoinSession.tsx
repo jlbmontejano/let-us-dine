@@ -10,25 +10,23 @@ import {
 import { Input } from "@/components/ui/input";
 import { useCheckSession } from "@/lib/react-query/queries";
 import { checkSessionSchema } from "@/lib/zod-validation";
+import { CheckSessionValues } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 
 const JoinSession = () => {
 	const { mutateAsync: checkSession, isPending } = useCheckSession();
 
-	// 1. Define your form.
-	const form = useForm<z.infer<typeof checkSessionSchema>>({
+	const form = useForm<CheckSessionValues>({
 		resolver: zodResolver(checkSessionSchema),
 		defaultValues: {
 			sessionId: "",
 		},
 	});
 
-	// 2. Define a submit handler.
-	async function onSubmit(values: z.infer<typeof checkSessionSchema>) {
+	const onSubmit = (values: CheckSessionValues) => {
 		checkSession(values.sessionId);
-	}
+	};
 
 	return (
 		<div className='setup-form-container'>
@@ -42,7 +40,7 @@ const JoinSession = () => {
 						render={({ field }) => (
 							<FormItem>
 								<FormLabel>
-									Enter the ID shared with you:
+									Enter the session ID shared with you:
 								</FormLabel>
 								<FormControl>
 									<Input {...field} />

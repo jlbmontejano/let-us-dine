@@ -6,9 +6,10 @@ type ErrorPageProps = {
 };
 
 const ErrorPage = ({
-	text = "Ooops... there's been an error.",
+	text = "Something went wrong. Please try again.",
 }: ErrorPageProps) => {
 	const navigate = useNavigate();
+
 	return (
 		<div className='helper-container'>
 			<h1 className='helper-container-title'>{text}</h1>

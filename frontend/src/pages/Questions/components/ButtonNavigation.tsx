@@ -1,7 +1,6 @@
 import BackButton from "@/components/shared/BackButton";
 import { Button } from "@/components/ui/button";
 import QUESTIONS from "@/constants/questions";
-import React from "react";
 
 type ButtonNavigationProps = {
 	currentQuestion: number;
@@ -16,27 +15,29 @@ const ButtonNavigation = ({
 	isPending,
 	handleSubmit,
 }: ButtonNavigationProps) => {
+	const isFirstQuestion = currentQuestion === 0;
+	const isLastQuestion = currentQuestion === QUESTIONS.length - 1;
+
+	const handlePrevious = () => setCurrentQuestion(prev => prev - 1);
+	const handleNext = () => setCurrentQuestion(prev => prev + 1);
+
 	return (
 		<section className='flex justify-between'>
-			{currentQuestion === 0 ? (
+			{isFirstQuestion ? (
 				<BackButton />
 			) : (
-				<Button onClick={() => setCurrentQuestion(prev => prev - 1)}>
-					Previous Question
-				</Button>
+				<Button onClick={handlePrevious}>Previous Question</Button>
 			)}
 
-			{currentQuestion < QUESTIONS.length - 1 ? (
-				<Button onClick={() => setCurrentQuestion(prev => prev + 1)}>
-					Next Question
-				</Button>
-			) : (
+			{isLastQuestion ? (
 				<Button
 					type='submit'
 					onClick={handleSubmit}
 					disabled={isPending}>
 					{isPending ? "Submitting..." : "Submit"}
 				</Button>
+			) : (
+				<Button onClick={handleNext}>Next Question</Button>
 			)}
 		</section>
 	);

@@ -3,13 +3,14 @@ import { useLocation } from "react-router-dom";
 const Footer = () => {
 	const location = useLocation();
 
-	if (location.pathname === "/") return;
+	if (location.pathname === "/") return null;
 
 	return (
 		<footer className='padding-control flex justify-end'>
 			<a
 				href='https://jorgebuenrostro.com/'
 				target='_blank'
+				rel='noopener noreferrer'
 				className='hover:underline'>
 				Created by Jorge Buenrostro
 			</a>

@@ -1,38 +1,25 @@
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
 import { useGetSession } from "@/lib/react-query/queries";
 import ShowProgress from "@/pages/Result/components/ShowProgress";
 import ShowResults from "@/pages/Result/components/ShowResults";
 import ErrorPage from "@/pages/StateManage/ErrorPage";
 import Loader from "@/pages/StateManage/Loader";
-import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 const Results = () => {
 	const navigate = useNavigate();
-	const { toast } = useToast();
 	const { sessionId } = useParams();
 	const {
 		data: sessionStatus,
-		isError: statusError,
-		isPending: statusPending,
-	} = useGetSession(sessionId!);
+		isError,
+		isPending,
+	} = useGetSession(sessionId ?? "");
 
-	useEffect(() => {
-		if (!sessionId || statusError) {
-			navigate("/setup");
-			toast({
-				description: "Error fetching session data",
-				variant: "destructive",
-			});
-		}
-	}, [sessionId, statusError, toast]);
-
-	if (!sessionId || statusError) {
+	if (!sessionId || isError) {
 		return <ErrorPage text={"Error fetching data"} />;
 	}
 
-	if (statusPending) {
+	if (isPending) {
 		return <Loader text="Fetching session's data" />;
 	}
 

@@ -43,7 +43,6 @@ const Questions = () => {
 		isPending,
 	} = useCreateResults();
 
-	// Simple form for current question only
 	const form = useForm({
 		defaultValues: {
 			currentAnswer: selectedAnswers[currentQuestion] || "",
@@ -81,13 +80,13 @@ const Questions = () => {
 
 	const handleSubmit = async () => {
 		// Check if all questions are answered
-		const unansweredQuestions = QUESTIONS.map((_, index) => index).filter(
+		const unansweredCount = QUESTIONS.map((_, index) => index).filter(
 			index => !selectedAnswers[index],
-		);
+		).length;
 
-		if (unansweredQuestions.length > 0) {
+		if (unansweredCount > 0) {
 			toast({
-				description: `Please answer all questions. Missing: ${unansweredQuestions.length} questions.`,
+				description: `Please answer all questions. Missing: ${unansweredCount} questions.`,
 				variant: "destructive",
 			});
 			return;
@@ -163,10 +162,10 @@ const Questions = () => {
 										onValueChange={handleAnswerChange}
 										className='grid grid-cols-2'>
 										{QUESTIONS[currentQuestion].answers.map(
-											({ text }, optionsessionIdx) => (
+											({ text }) => (
 												<FormItem
-													className={`flex h-[70px] w-full cursor-pointer items-center space-y-0 rounded-xl bg-gray-100 p-4 transition-all duration-200 ${selectedAnswers[currentQuestion] === text ? "bg-red_accent text-white" : "hover:bg-gray-300"}`}
-													key={optionsessionIdx}
+													className={`flex h-[70px] w-full cursor-pointer items-center space-y-0 rounded-xl bg-secondary p-4 transition-all duration-200 ${selectedAnswers[currentQuestion] === text ? "bg-accent text-white" : "hover:bg-gray-300"}`}
+													key={text}
 													onClick={() =>
 														handleAnswerChange(text)
 													}>
