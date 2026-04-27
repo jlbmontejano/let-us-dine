@@ -29,10 +29,10 @@ app.use(limiter);
 
 app.use(express.static(path.join(process.cwd(), "public")));
 
-app.use("/results", resultRoutes);
-app.use("/sessions", sessionRoutes);
-app.use("/answers", answersRoutes);
-app.use("/questions", questionsRoutes);
+app.use("/api/results", resultRoutes);
+app.use("/api/sessions", sessionRoutes);
+app.use("/api/answers", answersRoutes);
+app.use("/api/questions", questionsRoutes);
 
 app.use(errorHandler);
 

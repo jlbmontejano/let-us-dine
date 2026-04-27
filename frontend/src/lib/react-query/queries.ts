@@ -12,7 +12,7 @@ export const useCreateSession = () => {
 	return useMutation({
 		mutationFn: (totalParticipants: number) =>
 			apiFetch<SessionStatus>(
-				`${import.meta.env.VITE_API_URL}/sessions`,
+				`${import.meta.env.VITE_API_URL}/api/sessions`,
 				{
 					method: "POST",
 					body: JSON.stringify({ totalParticipants }),
@@ -38,10 +38,13 @@ export const useCreateResults = () => {
 			sessionId: string;
 			reqBody: CreateSessionResultBody;
 		}) =>
-			apiFetch(`${import.meta.env.VITE_API_URL}/sessions/${sessionId}`, {
-				method: "POST",
-				body: JSON.stringify(reqBody),
-			}),
+			apiFetch(
+				`${import.meta.env.VITE_API_URL}/api/sessions/${sessionId}`,
+				{
+					method: "POST",
+					body: JSON.stringify(reqBody),
+				},
+			),
 		onSuccess: (_, { sessionId }) => {
 			queryClient.invalidateQueries({
 				queryKey: [QUERY_KEYS.GET_RESULTS, QUERY_KEYS.GET_SESSION],
@@ -58,7 +61,7 @@ export const useCheckSession = () => {
 	return useMutation({
 		mutationFn: (sessionId: string) =>
 			apiFetch<SessionStatus>(
-				`${import.meta.env.VITE_API_URL}/sessions/${sessionId}`,
+				`${import.meta.env.VITE_API_URL}/api/sessions/${sessionId}`,
 			),
 		onSuccess: data => {
 			if (!data.isActive) {
@@ -85,7 +88,7 @@ export const useGetSession = (sessionId: string) =>
 		enabled: !!sessionId,
 		queryFn: () =>
 			apiFetch<SessionStatus>(
-				`${import.meta.env.VITE_API_URL}/sessions/${sessionId}`,
+				`${import.meta.env.VITE_API_URL}/api/sessions/${sessionId}`,
 			),
 	});
 
@@ -95,6 +98,6 @@ export const useGetResults = (sessionId: string) =>
 		enabled: !!sessionId,
 		queryFn: () =>
 			apiFetch<SessionResult>(
-				`${import.meta.env.VITE_API_URL}/sessions/${sessionId}/results`,
+				`${import.meta.env.VITE_API_URL}/api/sessions/${sessionId}/results`,
 			),
 	});
