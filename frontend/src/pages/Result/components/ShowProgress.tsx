@@ -5,18 +5,19 @@ type ShowProgressProps = {
 	sessionStatus: SessionStatus;
 };
 
-const ShowProgress = ({ sessionStatus }: ShowProgressProps) => {
+const ShowProgress = ({
+	sessionStatus: { currentParticipants, totalParticipants, uuid },
+}: ShowProgressProps) => {
 	return (
 		<div className='flex flex-col items-center gap-4'>
 			<section className='mb-6 text-center'>
 				<h1 className='text-2xl font-semibold'>Responses pending!</h1>
 				<p>
-					{sessionStatus.currentParticipants} out of{" "}
-					{sessionStatus.totalParticipants} participants have
-					responded the questionnaire.
+					{currentParticipants} out of {totalParticipants}{" "}
+					participants have responded to the questionnaire.
 				</p>
 			</section>
-			<ShareId sessionId={sessionStatus.uuid} />
+			<ShareId sessionId={uuid} />
 		</div>
 	);
 };
