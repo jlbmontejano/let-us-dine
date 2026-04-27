@@ -12,7 +12,8 @@ export default async function apiFetch<T>(
 	}
 
 	if (!response.ok) {
-		throw new Error("Network or server error");
+		const json = await response.json().catch(() => null);
+		throw new Error(json?.message || `Server error: ${response.status}`);
 	}
 
 	const json = await response.json();
