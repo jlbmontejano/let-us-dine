@@ -24,10 +24,19 @@ const Questions = () => {
 	const { toast } = useToast();
 	const { sessionId } = useParams();
 	const { userLocation } = useUserLocation();
-	const [currentQuestion, setCurrentQuestion] = useState<number>(0);
+
+	const [currentQuestion, setCurrentQuestion] = useState<number>(() => {
+		const saved = sessionStorage.getItem(`currentQuestion_${sessionId}`);
+		return saved ? parseInt(saved) : 0;
+	});
+
 	const [selectedAnswers, setSelectedAnswers] = useState<
 		Record<number, string>
-	>({});
+	>(() => {
+		const saved = sessionStorage.getItem(`selectedAnswers_${sessionId}`);
+		return saved ? JSON.parse(saved) : {};
+	});
+
 	const {
 		mutateAsync: createResults,
 		isError,
@@ -45,6 +54,22 @@ const Questions = () => {
 	useEffect(() => {
 		form.setValue("currentAnswer", selectedAnswers[currentQuestion] || "");
 	}, [currentQuestion, selectedAnswers, form]);
+
+	// Persists currentQuestion in case the user reloads the page
+	useEffect(() => {
+		sessionStorage.setItem(
+			`currentQuestion_${sessionId}`,
+			currentQuestion.toString(),
+		);
+	}, [currentQuestion, sessionId]);
+
+	// Persists selectedAnswers in case the user reloads the page
+	useEffect(() => {
+		sessionStorage.setItem(
+			`selectedAnswers_${sessionId}`,
+			JSON.stringify(selectedAnswers),
+		);
+	}, [selectedAnswers, sessionId]);
 
 	const handleAnswerChange = (value: string) => {
 		setSelectedAnswers(prev => ({
@@ -98,7 +123,21 @@ const Questions = () => {
 		};
 
 		await createResults({ sessionId, reqBody });
+
+		sessionStorage.removeItem(`selectedAnswers_${sessionId}`);
+		sessionStorage.removeItem(`currentQuestion_${sessionId}`);
 	};
+
+	// Show toast on reload if answers were restored
+	useEffect(() => {
+		const saved = sessionStorage.getItem(`selectedAnswers_${sessionId}`);
+		if (saved && Object.keys(JSON.parse(saved)).length > 0) {
+			toast({
+				description: "Welcome back! Your answers have been restored.",
+			});
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	if (!sessionId || isError) {
 		return <ErrorPage text={"Error creating results."} />;
