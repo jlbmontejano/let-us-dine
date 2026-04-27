@@ -25,7 +25,7 @@ const ShareId = ({ sessionId }: ShareIdProps) => {
 	};
 
 	return (
-		<section className='flex flex-col'>
+		<section className='flex flex-col gap-1'>
 			<Label className='text-sm font-semibold'>
 				Remember to share the session ID:
 			</Label>

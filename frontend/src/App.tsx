@@ -10,7 +10,7 @@ import Loader from "@/pages/StateManage/Loader";
 import LocationDenied from "@/pages/StateManage/LocationDenied";
 import { Route, Routes } from "react-router-dom";
 
-function App() {
+const App = () => {
 	const { isLoading, locationDenied } = useUserLocation();
 
 	const renderContent = () => {
@@ -39,12 +39,12 @@ function App() {
 	};
 
 	return (
-		<div className='flex h-screen w-screen flex-col'>
+		<div className='flex min-h-screen w-full flex-col bg-background'>
 			<main className='flex grow flex-col'>{renderContent()}</main>
 			<Footer />
 			<Toaster />
 		</div>
 	);
-}
+};
 
 export default App;
