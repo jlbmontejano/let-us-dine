@@ -12,11 +12,11 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { useCreateSession } from "@/lib/react-query/queries";
 import { createSessionSchema } from "@/lib/zod-validation";
+import { CreateSessionValues } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { z } from "zod";
 
 const CreateSession = () => {
 	const navigate = useNavigate();
@@ -35,35 +35,35 @@ const CreateSession = () => {
 				variant: "destructive",
 			});
 		}
-	}, [isError]);
+	}, [isError, toast]);
 
-	// 1. Define your form.
-	const form = useForm<z.infer<typeof createSessionSchema>>({
+	const form = useForm<CreateSessionValues>({
 		resolver: zodResolver(createSessionSchema),
 		defaultValues: {
 			totalParticipants: 2,
 		},
 	});
 
-	// 2. Define a submit handler.
-	async function onSubmit(values: z.infer<typeof createSessionSchema>) {
+	const onSubmit = async (values: CreateSessionValues) => {
 		const { totalParticipants } = values;
 
 		const data = await createSession(totalParticipants);
 
 		setSessionId(data.uuid);
 		toast({ description: "Session created successfully." });
-	}
+	};
 
-	function handleStart() {
+	const handleStart = () => {
 		if (!sessionId) {
 			toast({
 				description: "Error getting session ID.",
 				variant: "destructive",
 			});
+			return;
 		}
+
 		navigate(`/questions/${sessionId}`);
-	}
+	};
 
 	return (
 		<div className='setup-form-container'>

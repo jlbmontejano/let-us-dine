@@ -9,26 +9,24 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { checkSessionSchema } from "@/lib/zod-validation";
+import { CheckSessionValues } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { z } from "zod";
 
 const CheckResults = () => {
 	const navigate = useNavigate();
 
-	// 1. Define your form.
-	const form = useForm<z.infer<typeof checkSessionSchema>>({
+	const form = useForm<CheckSessionValues>({
 		resolver: zodResolver(checkSessionSchema),
 		defaultValues: {
 			sessionId: "",
 		},
 	});
 
-	// 2. Define a submit handler.
-	async function onSubmit(values: z.infer<typeof checkSessionSchema>) {
+	const onSubmit = (values: CheckSessionValues) => {
 		navigate(`/sessions/${values.sessionId}/results`);
-	}
+	};
 
 	return (
 		<div className='setup-form-container'>
@@ -41,7 +39,7 @@ const CheckResults = () => {
 						name='sessionId'
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel>Enter the session's ID:</FormLabel>
+								<FormLabel>Enter the session ID:</FormLabel>
 								<FormControl>
 									<Input {...field} />
 								</FormControl>
