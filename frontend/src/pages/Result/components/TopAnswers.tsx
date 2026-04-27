@@ -11,10 +11,10 @@ const TopAnswers = ({ topAnswers }: TopAnswersProps) => {
 				Here are the top answers for your session:
 			</h2>
 			{topAnswers.map(
-				({ answerText, questionText, voteCount }: TopAnswer, index) => (
+				({ answerText, questionText, voteCount }, index) => (
 					<div
-						className='rounded-xl border-l-2 border-l-red_accent bg-gray-50 p-4'
-						key={`${questionText}/${answerText}/${voteCount}`}>
+						className='rounded-xl border-l-2 border-l-accent bg-secondary p-4'
+						key={questionText}>
 						<p>
 							<span className='font-semibold'>
 								Question #{index + 1}:{" "}
