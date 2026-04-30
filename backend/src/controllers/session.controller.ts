@@ -70,7 +70,7 @@ export const getSessions = asyncHandler(
 
     return res
       .status(200)
-      .json({ success: true, data: sessions, count: sessions.length });
+      .json({ success: true, count: sessions.length, data: sessions });
   },
 );
 
@@ -127,6 +127,19 @@ export const getSessionResults = asyncHandler(
     return res.status(200).json({
       success: true,
       data: completedSession,
+    });
+  },
+);
+
+//@desc    Delete sessions that are older than 1 week
+//@route   DELETE /sessions/cleanup
+//@access  Private
+export const deleteSessions = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    await SessionServices.deleteOldSessions();
+
+    return res.status(204).json({
+      success: true,
     });
   },
 );

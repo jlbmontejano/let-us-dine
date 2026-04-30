@@ -30,6 +30,6 @@ export const getAnswers = asyncHandler(
 
     return res
       .status(200)
-      .json({ success: true, data: answers, count: answers.length });
+      .json({ success: true, count: answers.length, data: answers });
   },
 );
