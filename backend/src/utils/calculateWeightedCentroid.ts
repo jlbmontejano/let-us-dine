@@ -6,15 +6,19 @@ type SearchArea = {
   radiusMeters: number;
 };
 
+const MINIMUM_RADIUS = 1_000;
+const MAX_GOOGLE_PLACES_RADIUS = 50_000;
+
 export default function calculateWeightedCentroid(
   userLocations: PostFormatLocation[],
 ): SearchArea {
-  // Weight by inverse of travel distance (users willing to travel less get more weight)
+  // Users willing to travel less get higher weight, pulling the center closer to them
   const totalWeight = userLocations.reduce(
     (sum, user) => sum + 1 / user.maxTravelDistance,
     0,
   );
 
+  // Weighted average of all user coordinates
   const centerLat = userLocations.reduce((sum, user) => {
     const weight = 1 / user.maxTravelDistance / totalWeight;
     return sum + user.latitude * weight;
@@ -25,26 +29,41 @@ export default function calculateWeightedCentroid(
     return sum + user.longitude * weight;
   }, 0);
 
-  // Calculate radius: distance from center to furthest user, adjusted by their travel preference
-  let maxRadius = 0;
-  userLocations.forEach((user) => {
-    const distanceToCenter = calculateDistance(
+  const userDistances = userLocations.map((user) => ({
+    distanceToCenter: calculateDistance(
       centerLat,
       centerLng,
       user.latitude,
       user.longitude,
-    );
+    ),
+    maxTravelDistance: user.maxTravelDistance,
+  }));
+
+  // How much further the most disadvantaged user would need to travel beyond their limit
+  const maxOvershoot = userDistances.reduce((max, user) => {
+    const overshoot = user.distanceToCenter - user.maxTravelDistance;
+    return Math.max(max, overshoot);
+  }, 0);
+
+  // Remaining travel budget for each user after reaching the center
+  const maxRadius = userDistances.reduce((max, user) => {
     const effectiveRadius = Math.max(
       0,
-      user.maxTravelDistance - distanceToCenter,
+      user.maxTravelDistance - user.distanceToCenter,
     );
-    maxRadius = Math.max(maxRadius, effectiveRadius);
-  });
+    return Math.max(max, effectiveRadius);
+  }, 0);
+
+  // Guarantee a minimum radius and expand to cover users who can't reach the center
+  const radiusMeters = Math.min(
+    MAX_GOOGLE_PLACES_RADIUS,
+    Math.max(MINIMUM_RADIUS, maxRadius, maxOvershoot),
+  );
 
   return {
     centerLat,
     centerLng,
-    radiusMeters: maxRadius,
+    radiusMeters,
   };
 }
 
@@ -54,7 +73,7 @@ function calculateDistance(
   lat2: number,
   lng2: number,
 ): number {
-  const R = 6371000; // Earth's radius in meters
+  const R = 6371000;
   const dLat = ((lat2 - lat1) * Math.PI) / 180;
   const dLng = ((lng2 - lng1) * Math.PI) / 180;
 
@@ -67,5 +86,5 @@ function calculateDistance(
 
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-  return R * c; // Distance in meters
+  return R * c;
 }
