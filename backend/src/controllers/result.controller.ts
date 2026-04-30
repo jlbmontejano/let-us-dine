@@ -30,6 +30,6 @@ export const getResults = asyncHandler(
 
     return res
       .status(200)
-      .json({ success: true, data: results, count: results.length });
+      .json({ success: true, count: results.length, data: results });
   },
 );
