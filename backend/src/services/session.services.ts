@@ -162,3 +162,31 @@ export async function findResultsById(id: string) {
     },
   });
 }
+
+export async function deleteOldSessions() {
+  const oneWeekAgo = new Date();
+  oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+  // Find all session uuids older than one week
+  const oldSessions = await prisma.session.findMany({
+    where: { createdAt: { lt: oneWeekAgo } },
+    select: { uuid: true },
+  });
+
+  const uuids = oldSessions.map((s) => s.uuid);
+
+  if (uuids.length === 0) return;
+
+  // Delete child records first, then the sessions
+  await prisma.result.deleteMany({
+    where: { sessionUuid: { in: uuids } },
+  });
+
+  await prisma.completedSession.deleteMany({
+    where: { sessionUuid: { in: uuids } },
+  });
+
+  await prisma.session.deleteMany({
+    where: { uuid: { in: uuids } },
+  });
+}

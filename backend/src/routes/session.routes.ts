@@ -5,6 +5,7 @@ import {
   getSession,
   getSessionResults,
   getSessions,
+  deleteSessions,
 } from "../controllers/session.controller";
 import requireApiKey from "../middleware/requireKey";
 import validateParams from "../middleware/validateParams";
@@ -16,5 +17,6 @@ router.post("/:id", validateParams, createSessionResult);
 router.get("/:id", validateParams, getSession);
 router.get("/", requireApiKey, getSessions);
 router.get("/:id/results", validateParams, getSessionResults);
+router.delete("/cleanup", requireApiKey, deleteSessions);
 
 export default router;
