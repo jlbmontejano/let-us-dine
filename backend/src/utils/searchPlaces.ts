@@ -79,8 +79,6 @@ export default async function searchPlaces(
       return [];
     }
 
-    console.log("googlePlace before filtering: ", data.places.length);
-
     const priceLevelAnswer =
       topAnswers[PRICE_LEVEL_INDEX].answerApiParams.price!;
     const mealTypeAnswer =
