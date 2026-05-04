@@ -1,17 +1,41 @@
 import { createSessionSchema } from "../utils/zod-validation/schemas";
 
-test("test negative number of participants", () => {
-  const result = createSessionSchema.safeParse({
-    totalParticipants: -1,
+describe("createSessionSchema", () => {
+  // Valid inputs
+  it("accepts the minimum valid value (2)", () => {
+    const result = createSessionSchema.safeParse({ totalParticipants: 2 });
+    expect(result.success).toBe(true);
   });
 
-  expect(result.success).toBe(false);
-});
-
-test("test negative number of participants", () => {
-  const result = createSessionSchema.safeParse({
-    totalParticipants: 1_000,
+  it("accepts the maximum valid value (12)", () => {
+    const result = createSessionSchema.safeParse({ totalParticipants: 12 });
+    expect(result.success).toBe(true);
   });
 
-  expect(result.success).toBe(false);
+  it("accepts a mid-range value", () => {
+    const result = createSessionSchema.safeParse({ totalParticipants: 6 });
+    expect(result.success).toBe(true);
+  });
+
+  // Boundaries
+  it("rejects 1 (gt(1) means strictly greater than)", () => {
+    const result = createSessionSchema.safeParse({ totalParticipants: 1 });
+    expect(result.success).toBe(false);
+  });
+
+  it("rejects 13 (one above the maximum)", () => {
+    const result = createSessionSchema.safeParse({ totalParticipants: 13 });
+    expect(result.success).toBe(false);
+  });
+
+  // Coercion behaviour
+  it("coerces a valid numeric string to a number", () => {
+    const result = createSessionSchema.safeParse({ totalParticipants: "5" });
+    expect(result.success).toBe(true);
+  });
+
+  it("rejects a non-numeric string (coercion produces NaN)", () => {
+    const result = createSessionSchema.safeParse({ totalParticipants: "five" });
+    expect(result.success).toBe(false);
+  });
 });
