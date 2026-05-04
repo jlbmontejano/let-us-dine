@@ -135,8 +135,6 @@ export async function createResult(
 
       const googlePlaces = await searchPlaces(topAnswers, searchParams);
 
-      console.log("googlePlace after filtering: ", googlePlaces.length);
-
       await tx.completedSession.create({
         data: {
           centerLat,
