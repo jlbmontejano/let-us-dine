@@ -1,12 +1,13 @@
 import cors from "cors";
 import express from "express";
-import path from "path";
 import rateLimit from "express-rate-limit";
-import resultRoutes from "../src/routes/result.routes";
-import sessionRoutes from "../src/routes/session.routes";
-import errorHandler from "./middleware/errorHandler";
-import answersRoutes from "./routes/answer.routes";
-import questionsRoutes from "./routes/question.routes";
+import path from "path";
+
+import errorHandler from "@/middleware/errorHandler";
+import answersRoutes from "@/routes/answer.routes";
+import questionsRoutes from "@/routes/question.routes";
+import resultRoutes from "@/routes/result.routes";
+import sessionRoutes from "@/routes/session.routes";
 
 const app = express();
 

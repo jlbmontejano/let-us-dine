@@ -1,7 +1,8 @@
 import { Router } from "express";
-import { getResult, getResults } from "../controllers/result.controller";
-import requireApiKey from "../middleware/requireKey";
-import validateParams from "../middleware/validateParams";
+
+import { getResult, getResults } from "@/controllers/result.controller";
+import requireApiKey from "@/middleware/requireKey";
+import validateParams from "@/middleware/validateParams";
 
 const router = Router();
 

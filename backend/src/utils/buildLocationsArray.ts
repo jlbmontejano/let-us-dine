@@ -1,4 +1,4 @@
-import { PostFormatLocation, PreFormatLocation } from "../types/index";
+import { PostFormatLocation, PreFormatLocation } from "@/types/index";
 
 export default function buildLocationsArray(
   usersLocations: PreFormatLocation[],

@@ -1,13 +1,13 @@
-import prisma from "../../prisma/prismaClient";
-import QUESTIONS from "../constants/questions";
-import { PostFormatLocation, PreFormatLocation } from "../types/index";
-import { QuestionData } from "../types/shared";
-import buildLocationsArray from "../utils/buildLocationsArray";
-import calculateTopAnswers from "../utils/calculateTopAnswers";
-import calculateWeightedCentroid from "../utils/calculateWeightedCentroid";
-import ErrorResponse from "../utils/errorResponse";
-import formatSearchParams from "../utils/formatSearchParams";
-import searchPlaces from "../utils/searchPlaces";
+import QUESTIONS from "@/constants/questions";
+import { PostFormatLocation, PreFormatLocation } from "@/types/index";
+import buildLocationsArray from "@/utils/buildLocationsArray";
+import calculateTopAnswers from "@/utils/calculateTopAnswers";
+import calculateWeightedCentroid from "@/utils/calculateWeightedCentroid";
+import ErrorResponse from "@/utils/errorResponse";
+import formatSearchParams from "@/utils/formatSearchParams";
+import searchPlaces from "@/utils/searchPlaces";
+import prisma from "@localPrisma/prismaClient";
+import { CreateSessionResultBody } from "@lud/shared";
 
 const RADIUS_QUESTION = QUESTIONS[2].text;
 
@@ -42,11 +42,11 @@ export async function findAll() {
 
 export async function createResult(
   sessionId: string,
-  questionnaireData: QuestionData[],
-  userLocation: GeolocationCoordinates,
+  data: CreateSessionResultBody,
 ) {
   return prisma.$transaction(async (tx: any) => {
     const createdResults = [];
+    const { questionnaireData, userLocation } = data;
 
     for (let i = 0; i < questionnaireData.length; i++) {
       const result = questionnaireData[i];
