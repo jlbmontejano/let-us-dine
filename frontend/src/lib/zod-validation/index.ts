@@ -1,12 +1,6 @@
-import QUESTIONS from "@/constants/questions";
 import { z } from "zod";
 
-export const createSessionSchema = z.object({
-	totalParticipants: z.coerce
-		.number<number>("Insert a number between 2 and 12")
-		.gt(1, "Number must be between 2 and 12")
-		.lte(12, "Number must be between 2 and 12"),
-});
+import QUESTIONS from "@/constants/questions";
 
 export const checkSessionSchema = z.object({
 	sessionId: z
