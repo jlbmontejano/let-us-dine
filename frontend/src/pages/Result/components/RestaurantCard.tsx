@@ -11,7 +11,7 @@ import { TbWorld } from "react-icons/tb";
 
 import { Button } from "@/components/ui/button";
 import DetailRow from "@/pages/Result/components/DetailRow";
-import { GooglePlace } from "@lud/shared/types/shared";
+import { GooglePlace } from "@/types/shared";
 
 type RestaurantCardProps = {
 	place: GooglePlace;
