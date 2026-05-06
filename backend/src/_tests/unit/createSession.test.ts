@@ -29,9 +29,9 @@ describe("createSessionSchema", () => {
   });
 
   // Coercion behaviour
-  it("coerces a valid numeric string to a number", () => {
+  it("rejects a numeric string since coercion was removed", () => {
     const result = createSessionSchema.safeParse({ totalParticipants: "5" });
-    expect(result.success).toBe(true);
+    expect(result.success).toBe(false);
   });
 
   it("rejects a non-numeric string (coercion produces NaN)", () => {
