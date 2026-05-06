@@ -17,6 +17,7 @@
   "description": "",
   "dependencies": {
     "@prisma/client": "^6.15.0",
+    "@lud/shared": "file:../shared",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.1",
@@ -30,7 +31,6 @@
     "@babel/preset-env": "^7.28.3",
     "@babel/preset-typescript": "^7.27.1",
     "@jest/globals": "^30.1.2",
-    "@lud/shared": "*",
     "@types/babel__core": "^7.20.5",
     "@types/babel__preset-env": "^7.10.0",
     "@types/cors": "^2.8.17",
