@@ -1,5 +1,5 @@
 import { GooglePlacesParams } from "@/types/index";
-import { TopAnswer } from "@lud/shared";
+import { TopAnswer } from "@/types/shared";
 
 export default function formatSearchParams(
   topAnswers: TopAnswer[],
