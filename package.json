@@ -1,0 +1,9 @@
+{
+  "name": "letusdine",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend",
+    "shared"
+  ]
+}
