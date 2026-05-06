@@ -23,7 +23,7 @@ jobs:
         working-directory: ./backend
 
       - name: Run tests
-        run: npx jest --testPathPattern=unit
+        run: npx jest --testPathPatterns=unit
         working-directory: ./backend
         env:
           ADMIN_API_KEY: ${{ secrets.ADMIN_API_KEY }}
