@@ -1,4 +1,4 @@
-import { createSessionSchema } from "../utils/zod-validation/schemas";
+import { createSessionSchema } from "@lud/shared/zod-validation";
 
 describe("createSessionSchema", () => {
   // Valid inputs

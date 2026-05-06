@@ -1,3 +1,8 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+
 import ShareId from "@/components/shared/ShareId";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,12 +16,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { useCreateSession } from "@/lib/react-query/queries";
-import { createSessionSchema } from "@/lib/zod-validation";
 import { CreateSessionValues } from "@/types";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { createSessionSchema } from "@lud/shared/zod-validation";
 
 const CreateSession = () => {
 	const navigate = useNavigate();
@@ -84,6 +85,11 @@ const CreateSession = () => {
 										<Input
 											{...field}
 											type='number'
+											onChange={e =>
+												field.onChange(
+													e.target.valueAsNumber,
+												)
+											}
 											disabled={isPending}
 										/>
 									</FormControl>

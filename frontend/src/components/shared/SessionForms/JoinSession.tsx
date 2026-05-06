@@ -1,3 +1,6 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+
 import { Button } from "@/components/ui/button";
 import {
 	Form,
@@ -11,8 +14,6 @@ import { Input } from "@/components/ui/input";
 import { useCheckSession } from "@/lib/react-query/queries";
 import { checkSessionSchema } from "@/lib/zod-validation";
 import { CheckSessionValues } from "@/types";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 
 const JoinSession = () => {
 	const { mutateAsync: checkSession, isPending } = useCheckSession();

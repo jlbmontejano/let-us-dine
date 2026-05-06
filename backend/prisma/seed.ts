@@ -1,5 +1,5 @@
-import QUESTIONS from "../src/constants/questions";
-import prisma from "./prismaClient";
+import QUESTIONS from "@/constants/questions";
+import prisma from "@localPrisma/prismaClient";
 
 async function main() {
   try {

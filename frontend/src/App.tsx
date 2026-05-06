@@ -1,3 +1,5 @@
+import { Route, Routes } from "react-router-dom";
+
 import Footer from "@/components/shared/Footer";
 import { Toaster } from "@/components/ui/toaster";
 import { useUserLocation } from "@/context/user-location";
@@ -8,7 +10,6 @@ import Setup from "@/pages/Setup";
 import ErrorPage from "@/pages/StateManage/ErrorPage";
 import Loader from "@/pages/StateManage/Loader";
 import LocationDenied from "@/pages/StateManage/LocationDenied";
-import { Route, Routes } from "react-router-dom";
 
 const App = () => {
 	const { isLoading, locationDenied } = useUserLocation();

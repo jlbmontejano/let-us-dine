@@ -1,5 +1,5 @@
-import calculateWeightedCentroid from "../utils/calculateWeightedCentroid";
-import { PostFormatLocation } from "../types/index";
+import { PostFormatLocation } from "@/types/index";
+import calculateWeightedCentroid from "@/utils/calculateWeightedCentroid";
 
 describe("calculateWeightedCentroid", () => {
   describe("center calculation", () => {

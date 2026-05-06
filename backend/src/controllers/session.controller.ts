@@ -1,11 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
-import asyncHandler from "../middleware/asyncHandler";
-import * as SessionServices from "../services/session.services";
-import { CreateSessionInfo, FindSessionInfo } from "../types/index";
-import { CreateSessionResultBody } from "../types/shared";
-import ErrorResponse from "../utils/errorResponse";
-import { createSessionSchema } from "../utils/zod-validation/schemas";
+
+import asyncHandler from "@/middleware/asyncHandler";
+import * as SessionServices from "@/services/session.services";
+import { CreateSessionInfo } from "@/types/index";
+import ErrorResponse from "@/utils/errorResponse";
+import { createSessionResultSchema } from "@/utils/zod-validation/schemas";
+import { SessionInfo as FindSessionInfo } from "@lud/shared";
+import { createSessionSchema } from "@lud/shared/zod-validation";
 
 //@desc    Create a new session
 //@route   POST /sessions
@@ -92,10 +94,16 @@ export const createSessionResult = asyncHandler(
     }
 
     try {
-      const { questionnaireData, userLocation } =
-        req.body as CreateSessionResultBody;
+      const dataValidation = createSessionResultSchema.safeParse(req.body);
 
-      await SessionServices.createResult(id, questionnaireData, userLocation);
+      if (!dataValidation.success) {
+        return res.status(400).json({
+          success: false,
+          message: "Data validation failed.",
+        });
+      }
+
+      await SessionServices.createResult(id, dataValidation.data);
 
       return res.status(201).json({
         success: true,
@@ -133,7 +141,7 @@ export const getSessionResults = asyncHandler(
 
 //@desc    Delete sessions that are older than 1 week
 //@route   DELETE /sessions/cleanup
-//@access  Private
+//@access  Admin
 export const deleteSessions = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     await SessionServices.deleteOldSessions();

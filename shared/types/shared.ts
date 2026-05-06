@@ -1,6 +1,16 @@
+export type SessionInfo = {
+  uuid: string;
+  isActive: boolean;
+  currentParticipants: number;
+  totalParticipants: number;
+};
+
 export type CreateSessionResultBody = {
   questionnaireData: QuestionData[];
-  userLocation: GeolocationCoordinates;
+  userLocation: {
+    latitude: number;
+    longitude: number;
+  };
 };
 
 export type QuestionData = {

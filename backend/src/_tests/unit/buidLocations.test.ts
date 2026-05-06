@@ -1,5 +1,5 @@
-import { PreFormatLocation } from "../types/index";
-import buildLocationsArray from "../utils/buildLocationsArray";
+import { PreFormatLocation } from "@/types/index";
+import buildLocationsArray from "@/utils/buildLocationsArray";
 
 // Helper function
 

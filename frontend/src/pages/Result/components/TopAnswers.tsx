@@ -1,4 +1,4 @@
-import { TopAnswer } from "@/types/shared";
+import { TopAnswer } from "@lud/shared/types/shared";
 
 type TopAnswersProps = {
 	topAnswers: TopAnswer[];

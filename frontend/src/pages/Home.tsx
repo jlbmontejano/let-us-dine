@@ -1,3 +1,6 @@
+import Autoplay from "embla-carousel-autoplay";
+import { useNavigate } from "react-router-dom";
+
 import { Button } from "@/components/ui/button";
 import {
 	Carousel,
@@ -5,8 +8,6 @@ import {
 	CarouselItem,
 } from "@/components/ui/carousel";
 import { CAROUSEL_IMAGES } from "@/constants";
-import Autoplay from "embla-carousel-autoplay";
-import { useNavigate } from "react-router-dom";
 
 const AUTOPLAY_PLUGIN = Autoplay({ delay: 1500 });
 const CAROUSEL_OPTS = { align: "start", loop: true } as const;

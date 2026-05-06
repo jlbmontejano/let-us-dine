@@ -1,10 +1,10 @@
-export type CuisineAnswer = { text: string; category: string };
-export type PriceAnswer = { text: string; price: string };
-export type DistanceAnswer = { text: string; maxTravelDistance: number };
-export type MealAnswer = { text: string; mealType: string };
-export type VibeAnswer = { text: string; vibe: string };
-export type RatingAnswer = { text: string; minRating: number };
-export type BeverageAnswer = { text: string; beverages: string };
+type CuisineAnswer = { text: string; category: string };
+type PriceAnswer = { text: string; price: string };
+type DistanceAnswer = { text: string; maxTravelDistance: number };
+type MealAnswer = { text: string; mealType: string };
+type VibeAnswer = { text: string; vibe: string };
+type RatingAnswer = { text: string; minRating: number };
+type BeverageAnswer = { text: string; beverages: string };
 
 type CuisineQuestion = { text: string; answers: CuisineAnswer[] };
 type PriceQuestion = { text: string; answers: PriceAnswer[] };
@@ -14,7 +14,7 @@ type VibeQuestion = { text: string; answers: VibeAnswer[] };
 type RatingQuestion = { text: string; answers: RatingAnswer[] };
 type BeverageQuestion = { text: string; answers: BeverageAnswer[] };
 
-type Question =
+export type Question =
   | CuisineQuestion
   | PriceQuestion
   | DistanceQuestion
@@ -22,5 +22,3 @@ type Question =
   | VibeQuestion
   | RatingQuestion
   | BeverageQuestion;
-
-export default Question;

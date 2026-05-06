@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from "express";
-import ErrorResponse from "../utils/errorResponse";
-import { checkParamsSchema } from "../utils/zod-validation/schemas";
-import asyncHandler from "./asyncHandler";
+
+import asyncHandler from "@/middleware/asyncHandler";
+import ErrorResponse from "@/utils/errorResponse";
+import { checkParamsSchema } from "@/utils/zod-validation/schemas";
 
 const validateParams = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
