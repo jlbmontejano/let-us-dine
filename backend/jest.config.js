@@ -8,8 +8,4 @@ module.exports = {
     ...tsJestTransformCfg,
   },
   testPathIgnorePatterns: ["/node_modules/", "/dist/"],
-  moduleNameMapper: {
-    "^@/(.*)$": "<rootDir>/src/$1",
-    "^@localPrisma/(.*)$": "<rootDir>/prisma/$1",
-  },
 };

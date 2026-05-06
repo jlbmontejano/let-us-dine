@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
-import ErrorResponse from "@/utils/errorResponse";
+import ErrorResponse from "../utils/errorResponse";
 
 function errorHandler(
   err: ErrorResponse,

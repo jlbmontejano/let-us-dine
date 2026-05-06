@@ -1,8 +1,8 @@
 import request from "supertest";
 import z from "zod";
 
-import { getQuestionSchema } from "@/_tests/schemas/index.schema";
-import app from "@/app";
+import app from "../../app";
+import { getQuestionSchema } from "../schemas/index.schema";
 
 describe("question routes", () => {
   describe("GET /api/questions/:id", () => {

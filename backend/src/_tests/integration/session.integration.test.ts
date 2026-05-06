@@ -1,11 +1,8 @@
 import request from "supertest";
 import z from "zod";
 
-import {
-  getSessionSchema,
-  postSessionSchema,
-} from "@/_tests/schemas/index.schema";
-import app from "@/app";
+import app from "../../app";
+import { getSessionSchema, postSessionSchema } from "../schemas/index.schema";
 
 const authHeader = { "x-api-key": process.env.ADMIN_API_KEY };
 

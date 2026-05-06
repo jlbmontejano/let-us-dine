@@ -1,8 +1,8 @@
 import { configDotenv } from "dotenv";
 configDotenv();
 
-import app from "@/app";
-import prisma from "@localPrisma/prismaClient";
+import prisma from "./prisma/prismaClient";
+import app from "./src/app";
 
 async function main() {
   const port = process.env.PORT || 8080;

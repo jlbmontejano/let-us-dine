@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 
-import asyncHandler from "@/middleware/asyncHandler";
-import * as AnswerServices from "@/services/answer.services";
-import { FindAnswerInfo } from "@/types/index";
-import ErrorResponse from "@/utils/errorResponse";
+import asyncHandler from "../middleware/asyncHandler";
+import * as AnswerServices from "../services/answer.services";
+import { FindAnswerInfo } from "../types/index";
+import ErrorResponse from "../utils/errorResponse";
 
 //@desc    Get a specific answer
 //@route   GET /answers/:id
