@@ -4,10 +4,12 @@ import { v4 as uuidv4 } from "uuid";
 import asyncHandler from "@/middleware/asyncHandler";
 import * as SessionServices from "@/services/session.services";
 import { CreateSessionInfo } from "@/types/index";
+import { SessionInfo as FindSessionInfo } from "@/types/shared";
 import ErrorResponse from "@/utils/errorResponse";
-import { createSessionResultSchema } from "@/utils/zod-validation/schemas";
-import { SessionInfo as FindSessionInfo } from "@lud/shared";
-import { createSessionSchema } from "@lud/shared/zod-validation";
+import {
+  createSessionResultSchema,
+  createSessionSchema,
+} from "@/utils/zod-validation";
 
 //@desc    Create a new session
 //@route   POST /sessions

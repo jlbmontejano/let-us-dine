@@ -1,4 +1,4 @@
-import { TopAnswer } from "@lud/shared";
+import { TopAnswer } from "@/types/shared";
 import { Prisma } from "@prisma/client";
 
 export default async function calculateTopAnswers(
