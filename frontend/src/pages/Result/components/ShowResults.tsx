@@ -1,10 +1,11 @@
+import { useEffect } from "react";
+
 import { useToast } from "@/hooks/use-toast";
 import { useGetResults } from "@/lib/react-query/queries";
+import NoResults from "@/pages/Result/components/NoResults";
+import PlacesList from "@/pages/Result/components/PlacesList";
+import TopAnswers from "@/pages/Result/components/TopAnswers";
 import ErrorPage from "@/pages/StateManage/ErrorPage";
-import { useEffect } from "react";
-import NoResults from "./NoResults";
-import PlacesList from "./PlacesList";
-import TopAnswers from "./TopAnswers";
 import Loader from "@/pages/StateManage/Loader";
 
 type ShowResultsProps = {

@@ -1,3 +1,6 @@
+import { useIsMutating } from "@tanstack/react-query";
+import { useState } from "react";
+
 import BackButton from "@/components/shared/BackButton";
 import CheckResults from "@/components/shared/SessionForms/CheckResults";
 import CreateSession from "@/components/shared/SessionForms/CreateSession";
@@ -5,8 +8,6 @@ import JoinSession from "@/components/shared/SessionForms/JoinSession";
 import { Button } from "@/components/ui/button";
 import { SESSION_OPTIONS } from "@/constants";
 import { SessionType } from "@/types/index";
-import { useIsMutating } from "@tanstack/react-query";
-import { useState } from "react";
 
 const Setup = () => {
 	const [sessionType, setSessionType] = useState<SessionType>(null);

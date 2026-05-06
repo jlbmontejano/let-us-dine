@@ -1,3 +1,7 @@
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useParams } from "react-router-dom";
+
 import {
 	Form,
 	FormControl,
@@ -15,10 +19,7 @@ import ButtonNavigation from "@/pages/Questions/components/ButtonNavigation";
 import Header from "@/pages/Questions/components/Header";
 import ErrorPage from "@/pages/StateManage/ErrorPage";
 import Loader from "@/pages/StateManage/Loader";
-import { CreateSessionResultBody, QuestionData } from "@/types/shared";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { useParams } from "react-router-dom";
+import { CreateSessionResultBody, QuestionData } from "@lud/shared";
 
 const Questions = () => {
 	const { toast } = useToast();
@@ -118,7 +119,10 @@ const Questions = () => {
 
 		const reqBody: CreateSessionResultBody = {
 			questionnaireData,
-			userLocation: userLocation.current,
+			userLocation: {
+				latitude: userLocation.current.latitude,
+				longitude: userLocation.current.longitude,
+			},
 		};
 
 		await createResults({ sessionId, reqBody });

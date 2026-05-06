@@ -1,17 +1,18 @@
-import { useToast } from "@/hooks/use-toast";
-import { SessionResult, SessionStatus } from "@/types/index";
-import { CreateSessionResultBody } from "@/types/shared";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import apiFetch from "./apiFetch";
-import QUERY_KEYS from "./queryKeys";
+
+import { useToast } from "@/hooks/use-toast";
+import apiFetch from "@/lib/react-query/apiFetch";
+import QUERY_KEYS from "@/lib/react-query/queryKeys";
+import { SessionResult } from "@/types/index";
+import { CreateSessionResultBody, SessionInfo } from "@lud/shared";
 
 export const useCreateSession = () => {
 	const queryClient = useQueryClient();
 
 	return useMutation({
 		mutationFn: (totalParticipants: number) =>
-			apiFetch<SessionStatus>(
+			apiFetch<SessionInfo>(
 				`${import.meta.env.VITE_API_URL}/api/sessions`,
 				{
 					method: "POST",
@@ -60,7 +61,7 @@ export const useCheckSession = () => {
 
 	return useMutation({
 		mutationFn: (sessionId: string) =>
-			apiFetch<SessionStatus>(
+			apiFetch<SessionInfo>(
 				`${import.meta.env.VITE_API_URL}/api/sessions/${sessionId}`,
 			),
 		onSuccess: data => {
@@ -87,7 +88,7 @@ export const useGetSession = (sessionId: string) =>
 		queryKey: [QUERY_KEYS.GET_SESSION, sessionId],
 		enabled: !!sessionId,
 		queryFn: () =>
-			apiFetch<SessionStatus>(
+			apiFetch<SessionInfo>(
 				`${import.meta.env.VITE_API_URL}/api/sessions/${sessionId}`,
 			),
 	});

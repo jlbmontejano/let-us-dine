@@ -1,5 +1,6 @@
-import { useToast } from "@/hooks/use-toast";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
+
+import { useToast } from "@/hooks/use-toast";
 
 type UserLocationType = {
 	userLocation: React.MutableRefObject<GeolocationCoordinates | undefined>;

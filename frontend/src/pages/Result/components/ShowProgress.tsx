@@ -1,12 +1,12 @@
 import ShareId from "@/components/shared/ShareId";
-import { SessionStatus } from "@/types/index";
+import { SessionInfo } from "@lud/shared";
 
 type ShowProgressProps = {
-	sessionStatus: SessionStatus;
+	sessionInfo: SessionInfo;
 };
 
 const ShowProgress = ({
-	sessionStatus: { currentParticipants, totalParticipants, uuid },
+	sessionInfo: { currentParticipants, totalParticipants, uuid },
 }: ShowProgressProps) => {
 	return (
 		<div className='flex flex-col items-center gap-4'>

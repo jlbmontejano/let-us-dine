@@ -1,5 +1,3 @@
-import { Button } from "@/components/ui/button";
-import { GooglePlace } from "@/types/shared";
 import { useState } from "react";
 import {
 	FaCalendarAlt,
@@ -10,7 +8,10 @@ import {
 } from "react-icons/fa";
 import { FaLocationDot, FaMoneyBill1Wave } from "react-icons/fa6";
 import { TbWorld } from "react-icons/tb";
-import DetailRow from "./DetailRow";
+
+import { Button } from "@/components/ui/button";
+import DetailRow from "@/pages/Result/components/DetailRow";
+import { GooglePlace } from "@lud/shared/types/shared";
 
 type RestaurantCardProps = {
 	place: GooglePlace;

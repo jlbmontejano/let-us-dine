@@ -1,16 +1,17 @@
+import { useNavigate, useParams } from "react-router-dom";
+
 import { Button } from "@/components/ui/button";
 import { useGetSession } from "@/lib/react-query/queries";
 import ShowProgress from "@/pages/Result/components/ShowProgress";
 import ShowResults from "@/pages/Result/components/ShowResults";
 import ErrorPage from "@/pages/StateManage/ErrorPage";
 import Loader from "@/pages/StateManage/Loader";
-import { useNavigate, useParams } from "react-router-dom";
 
 const Results = () => {
 	const navigate = useNavigate();
 	const { sessionId } = useParams();
 	const {
-		data: sessionStatus,
+		data: sessionInfo,
 		isError,
 		isPending,
 	} = useGetSession(sessionId ?? "");
@@ -29,8 +30,8 @@ const Results = () => {
 				Back to Main Menu
 			</Button>
 			<div className='w-full max-w-xl self-center'>
-				{sessionStatus.isActive ? (
-					<ShowProgress sessionStatus={sessionStatus} />
+				{sessionInfo.isActive ? (
+					<ShowProgress sessionInfo={sessionInfo} />
 				) : (
 					<ShowResults sessionId={sessionId} />
 				)}

@@ -1,5 +1,5 @@
-import { GooglePlace } from "@/types/shared";
-import RestaurantCard from "./RestaurantCard";
+import RestaurantCard from "@/pages/Result/components/RestaurantCard";
+import { GooglePlace } from "@lud/shared/types/shared";
 
 type PlacesListProps = {
 	places: GooglePlace[];
