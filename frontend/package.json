@@ -10,7 +10,6 @@
 		"preview": "vite preview"
 	},
 	"dependencies": {
-		"@lud/shared": "file:../shared",
 		"@hookform/resolvers": "^5.1.0",
 		"@radix-ui/react-label": "^2.1.0",
 		"@radix-ui/react-progress": "^1.1.7",

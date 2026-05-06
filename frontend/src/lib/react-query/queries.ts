@@ -5,7 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 import apiFetch from "@/lib/react-query/apiFetch";
 import QUERY_KEYS from "@/lib/react-query/queryKeys";
 import { SessionResult } from "@/types/index";
-import { CreateSessionResultBody, SessionInfo } from "@lud/shared";
+import { CreateSessionResultBody, SessionInfo } from "@/types/shared";
 
 export const useCreateSession = () => {
 	const queryClient = useQueryClient();

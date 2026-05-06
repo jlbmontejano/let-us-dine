@@ -1,8 +1,7 @@
 import z from "zod";
 
-import { checkSessionSchema } from "@/lib/zod-validation";
-import { GooglePlace, TopAnswer } from "@lud/shared";
-import { createSessionSchema } from "@lud/shared/zod-validation";
+import { checkSessionSchema, createSessionSchema } from "@/lib/zod-validation";
+import { GooglePlace, TopAnswer } from "@/types/shared";
 
 export type SessionType = "join" | "create" | "check" | "error" | null;
 

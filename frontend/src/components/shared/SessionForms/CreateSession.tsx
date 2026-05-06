@@ -16,8 +16,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { useCreateSession } from "@/lib/react-query/queries";
+import { createSessionSchema } from "@/lib/zod-validation";
 import { CreateSessionValues } from "@/types";
-import { createSessionSchema } from "@lud/shared/zod-validation";
 
 const CreateSession = () => {
 	const navigate = useNavigate();

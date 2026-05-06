@@ -19,7 +19,7 @@ import ButtonNavigation from "@/pages/Questions/components/ButtonNavigation";
 import Header from "@/pages/Questions/components/Header";
 import ErrorPage from "@/pages/StateManage/ErrorPage";
 import Loader from "@/pages/StateManage/Loader";
-import { CreateSessionResultBody, QuestionData } from "@lud/shared";
+import { CreateSessionResultBody, QuestionData } from "@/types/shared";
 
 const Questions = () => {
 	const { toast } = useToast();

@@ -1,7 +1,5 @@
 # ── Stage 1: Build the frontend ──────────────────────────────
 FROM node:20-alpine AS frontend-build
-WORKDIR /app
-COPY shared/ ./shared/
 WORKDIR /app/frontend
 COPY frontend/package*.json ./
 RUN npm ci
@@ -10,8 +8,6 @@ RUN npm run build
 
 # ── Stage 2: Build the backend ───────────────────────────────
 FROM node:20-alpine AS backend-build
-WORKDIR /app
-COPY shared/ ./shared/
 WORKDIR /app/backend
 COPY backend/package*.json ./
 COPY backend/prisma ./prisma
@@ -22,7 +18,6 @@ RUN npm run build
 # ── Stage 3: Production image ─────────────────────────────────
 FROM node:20-alpine
 WORKDIR /app
-COPY shared/ ./shared/
 COPY backend/package*.json ./
 COPY backend/prisma ./prisma
 RUN npm ci --omit=dev

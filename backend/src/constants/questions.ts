@@ -1,4 +1,4 @@
-import { Question } from "@lud/shared";
+import { Question } from "@/types/questions";
 
 const QUESTIONS: Question[] = [
   {
