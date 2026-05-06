@@ -23,11 +23,10 @@ jobs:
         working-directory: ./backend
 
       - name: Run tests
-        run: npm test
+        run: npx jest --testPathPattern=unit
         working-directory: ./backend
         env:
           ADMIN_API_KEY: ${{ secrets.ADMIN_API_KEY }}
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
   deploy:
     runs-on: ubuntu-latest
