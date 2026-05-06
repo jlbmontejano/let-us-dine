@@ -30,13 +30,6 @@ export type CreateSessionInfo = {
   uuid: string;
 };
 
-export type FindSessionInfo = {
-  uuid: string;
-  isActive: boolean;
-  currentParticipants: number;
-  totalParticipants: number;
-};
-
 export type PreFormatLocation = {
   answer: {
     apiParams: any;
