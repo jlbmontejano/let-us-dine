@@ -1,5 +1,5 @@
 import ShareId from "@/components/shared/ShareId";
-import { SessionInfo } from "@lud/shared";
+import { SessionInfo } from "@/types/shared";
 
 type ShowProgressProps = {
 	sessionInfo: SessionInfo;
