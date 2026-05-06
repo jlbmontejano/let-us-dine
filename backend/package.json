@@ -17,7 +17,6 @@
   "description": "",
   "dependencies": {
     "@prisma/client": "^6.15.0",
-    "@lud/shared": "file:../shared",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.1",

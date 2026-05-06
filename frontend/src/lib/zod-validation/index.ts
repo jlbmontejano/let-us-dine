@@ -2,6 +2,13 @@ import { z } from "zod";
 
 import QUESTIONS from "@/constants/questions";
 
+export const createSessionSchema = z.object({
+	totalParticipants: z
+		.number()
+		.gt(1, "Number must be between 2 and 12")
+		.lte(12, "Number must be between 2 and 12"),
+});
+
 export const checkSessionSchema = z.object({
 	sessionId: z
 		.uuidv4("Invalid ID")
