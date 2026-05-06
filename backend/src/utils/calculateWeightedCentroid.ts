@@ -1,4 +1,4 @@
-import { PostFormatLocation } from "@/types/index";
+import { PostFormatLocation } from "../types/index";
 
 type SearchArea = {
   centerLat: number;

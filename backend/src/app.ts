@@ -3,11 +3,11 @@ import express from "express";
 import rateLimit from "express-rate-limit";
 import path from "path";
 
-import errorHandler from "@/middleware/errorHandler";
-import answersRoutes from "@/routes/answer.routes";
-import questionsRoutes from "@/routes/question.routes";
-import resultRoutes from "@/routes/result.routes";
-import sessionRoutes from "@/routes/session.routes";
+import errorHandler from "./middleware/errorHandler";
+import answersRoutes from "./routes/answer.routes";
+import questionsRoutes from "./routes/question.routes";
+import resultRoutes from "./routes/result.routes";
+import sessionRoutes from "./routes/session.routes";
 
 const app = express();
 

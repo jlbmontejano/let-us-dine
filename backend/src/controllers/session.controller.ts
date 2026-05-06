@@ -1,15 +1,15 @@
 import { NextFunction, Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
 
-import asyncHandler from "@/middleware/asyncHandler";
-import * as SessionServices from "@/services/session.services";
-import { CreateSessionInfo } from "@/types/index";
-import { SessionInfo as FindSessionInfo } from "@/types/shared";
-import ErrorResponse from "@/utils/errorResponse";
+import asyncHandler from "../middleware/asyncHandler";
+import * as SessionServices from "../services/session.services";
+import { CreateSessionInfo } from "../types/index";
+import { SessionInfo as FindSessionInfo } from "../types/shared";
+import ErrorResponse from "../utils/errorResponse";
 import {
   createSessionResultSchema,
   createSessionSchema,
-} from "@/utils/zod-validation";
+} from "../utils/zod-validation";
 
 //@desc    Create a new session
 //@route   POST /sessions

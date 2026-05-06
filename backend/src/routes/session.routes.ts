@@ -7,9 +7,9 @@ import {
   getSession,
   getSessionResults,
   getSessions,
-} from "@/controllers/session.controller";
-import requireApiKey from "@/middleware/requireKey";
-import validateParams from "@/middleware/validateParams";
+} from "../controllers/session.controller";
+import requireApiKey from "../middleware/requireKey";
+import validateParams from "../middleware/validateParams";
 
 const router = Router();
 

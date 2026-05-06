@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-import { QuestionData } from "@/types/shared";
+import { QuestionData } from "../../types/shared";
 
 export const createSessionSchema = z.object({
   totalParticipants: z

@@ -9,12 +9,7 @@
     "strict": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
-    "types": ["jest"],
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"],
-      "@localPrisma/*": ["prisma/*"]
-    }
+    "types": ["jest"]
   },
   "include": ["src/**/*", "index.ts", "prisma/**/*"],
   "exclude": ["node_modules", "dist"]

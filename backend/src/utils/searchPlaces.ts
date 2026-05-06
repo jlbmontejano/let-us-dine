@@ -1,5 +1,5 @@
-import { GooglePlacesParams } from "@/types/index";
-import { GooglePlace, TopAnswer } from "@/types/shared";
+import { GooglePlacesParams } from "../types/index";
+import { GooglePlace, TopAnswer } from "../types/shared";
 
 const PRICE_LEVEL_INDEX = 1;
 const MEAL_TYPE_INDEX = 3;

@@ -1,13 +1,13 @@
-import QUESTIONS from "@/constants/questions";
-import { PostFormatLocation, PreFormatLocation } from "@/types/index";
-import { CreateSessionResultBody } from "@/types/shared";
-import buildLocationsArray from "@/utils/buildLocationsArray";
-import calculateTopAnswers from "@/utils/calculateTopAnswers";
-import calculateWeightedCentroid from "@/utils/calculateWeightedCentroid";
-import ErrorResponse from "@/utils/errorResponse";
-import formatSearchParams from "@/utils/formatSearchParams";
-import searchPlaces from "@/utils/searchPlaces";
-import prisma from "@localPrisma/prismaClient";
+import prisma from "../../prisma/prismaClient";
+import QUESTIONS from "../constants/questions";
+import { PostFormatLocation, PreFormatLocation } from "../types/index";
+import { CreateSessionResultBody } from "../types/shared";
+import buildLocationsArray from "../utils/buildLocationsArray";
+import calculateTopAnswers from "../utils/calculateTopAnswers";
+import calculateWeightedCentroid from "../utils/calculateWeightedCentroid";
+import ErrorResponse from "../utils/errorResponse";
+import formatSearchParams from "../utils/formatSearchParams";
+import searchPlaces from "../utils/searchPlaces";
 
 const RADIUS_QUESTION = QUESTIONS[2].text;
 

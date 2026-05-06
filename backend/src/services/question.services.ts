@@ -1,5 +1,5 @@
-import { FindQuestionInfo } from "@/types/index";
-import prisma from "@localPrisma/prismaClient";
+import prisma from "../../prisma/prismaClient";
+import { FindQuestionInfo } from "../types/index";
 
 export async function findById(id: string): Promise<FindQuestionInfo | null> {
   return prisma.question.findUnique({
