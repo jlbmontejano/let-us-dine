@@ -1,15 +1,10 @@
 import z from "zod";
-import { GooglePlace, TopAnswer } from "./shared";
-import { checkSessionSchema, createSessionSchema } from "@/lib/zod-validation";
+
+import { checkSessionSchema } from "@/lib/zod-validation";
+import { GooglePlace, TopAnswer } from "@lud/shared";
+import { createSessionSchema } from "@lud/shared/zod-validation";
 
 export type SessionType = "join" | "create" | "check" | "error" | null;
-
-export type SessionStatus = {
-	uuid: string;
-	isActive: boolean;
-	currentParticipants: number;
-	totalParticipants: number;
-};
 
 export type SessionResult = {
 	places: GooglePlace[];
