@@ -1,65 +1,17 @@
 import { useState } from "react";
-import {
-	FaCalendarAlt,
-	FaPhoneAlt,
-	FaRegStar,
-	FaStar,
-	FaStarHalf,
-} from "react-icons/fa";
+import { FaCalendarAlt, FaPhoneAlt } from "react-icons/fa";
 import { FaLocationDot, FaMoneyBill1Wave } from "react-icons/fa6";
 import { TbWorld } from "react-icons/tb";
 
 import { Button } from "@/components/ui/button";
 import DetailRow from "@/pages/Result/components/DetailRow";
 import { GooglePlace } from "@/types/shared";
+import compareDays from "@/utils/compareDays";
+import formatWebsiteUrl from "@/utils/formateWebsiteUrl";
+import renderStars from "@/utils/renderStars";
 
 type RestaurantCardProps = {
 	place: GooglePlace;
-};
-
-const renderStars = (rating: number) => {
-	const result = [];
-	for (let i = 1; i <= 5; i++) {
-		if (i <= rating) {
-			result.push(
-				<FaStar
-					color='#ffd700'
-					className='text-sm'
-					key={`star-${i}`}
-				/>,
-			);
-		} else if (i - 0.5 <= rating) {
-			result.push(
-				<FaStarHalf
-					color='#ffd700'
-					className='text-sm'
-					key={`star-${i}`}
-				/>,
-			);
-		} else {
-			result.push(
-				<FaRegStar
-					color='#ffd700'
-					className='text-sm'
-					key={`star-${i}`}
-				/>,
-			);
-		}
-	}
-
-	return result;
-};
-
-const formatWebsiteUrl = (url: string): string => {
-	let formatted = url.replace(/^https?:\/\//, "");
-	if (!formatted.startsWith("www.")) formatted = "www." + formatted;
-	if (formatted.endsWith("/")) formatted = formatted.split("/")[0];
-	return formatted;
-};
-
-const compareDays = (completeDay: string, currentDay: string): boolean => {
-	const weekday = completeDay.split(":")[0];
-	return weekday === currentDay;
 };
 
 const RestaurantCard = ({ place }: RestaurantCardProps) => {
