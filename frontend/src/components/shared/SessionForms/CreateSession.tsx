@@ -79,7 +79,7 @@ const CreateSession = () => {
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>
-										How many people will participate:
+										How many people will participate?
 									</FormLabel>
 									<FormControl>
 										<Input
