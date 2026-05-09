@@ -1,5 +1,7 @@
+ARG NODE_VERSION=22-alpine
+
 # ── Stage 1: Build the frontend ──────────────────────────────
-FROM node:20-alpine AS frontend-build
+FROM node:${NODE_VERSION} AS frontend-build
 WORKDIR /app/frontend
 COPY frontend/package*.json ./
 RUN npm ci
@@ -7,7 +9,7 @@ COPY frontend/ ./
 RUN npm run build
 
 # ── Stage 2: Build the backend ───────────────────────────────
-FROM node:20-alpine AS backend-build
+FROM node:${NODE_VERSION} AS backend-build
 WORKDIR /app/backend
 COPY backend/package*.json ./
 COPY backend/prisma ./prisma
@@ -16,7 +18,7 @@ COPY backend/ ./
 RUN npm run build
 
 # ── Stage 3: Production image ─────────────────────────────────
-FROM node:20-alpine
+FROM node:${NODE_VERSION}
 WORKDIR /app
 COPY backend/package*.json ./
 COPY backend/prisma ./prisma
