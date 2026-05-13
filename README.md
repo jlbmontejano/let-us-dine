@@ -25,7 +25,7 @@ Collaborative dining decision app that takes the guesswork out of choosing where
 - **PrismaORM**
 
 ### Database
-- **PosgreSQL**
+- **PostgreSQL**
 
 ### Deployment
 - **Render**: Everything is deployed inside a Render project
@@ -37,6 +37,7 @@ Collaborative dining decision app that takes the guesswork out of choosing where
 - Improved my knowledge of Google Cloud services and their APIs.
 - Gained experience in accessing and managing user location, including handling permission denial errors.
 - Enhanced my understanding of semantic HTML and SEO best practices.
+- Implemented different types of tests, including integration, unit and E2E tests
 
 ## Progress Screen
 <img width="2400" height="1590" alt="LUD-progress" src="https://github.com/user-attachments/assets/a26403a5-b16c-4e1b-9ab3-e8f38511ca2d" />
