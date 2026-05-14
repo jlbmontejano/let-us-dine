@@ -28,10 +28,14 @@ Collaborative dining decision app that takes the guesswork out of choosing where
 - **PostgreSQL**
 
 ### Deployment
-- **Render**: Everything is deployed inside a Render project
+- **DigitalOcean**: Everything is deployed inside a droplet
 
 ### Other
 - **Google Maps API**
+- **Docker**
+- **Playwright**
+- **Vitest**
+- **Jest**
 
 ## Lessons learned:
 - Improved my knowledge of Google Cloud services and their APIs.
