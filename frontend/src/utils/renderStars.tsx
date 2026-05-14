@@ -9,6 +9,7 @@ const renderStars = (rating: number) => {
 					color='#ffd700'
 					className='text-sm'
 					key={`star-${i}`}
+					data-testid='star-full'
 				/>,
 			);
 		} else if (i - 0.5 <= rating) {
@@ -17,6 +18,7 @@ const renderStars = (rating: number) => {
 					color='#ffd700'
 					className='text-sm'
 					key={`star-${i}`}
+					data-testid='star-half'
 				/>,
 			);
 		} else {
@@ -25,6 +27,7 @@ const renderStars = (rating: number) => {
 					color='#ffd700'
 					className='text-sm'
 					key={`star-${i}`}
+					data-testid='star-empty'
 				/>,
 			);
 		}
