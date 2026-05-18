@@ -8,8 +8,6 @@ import { SessionResult } from "@/types/index";
 import { CreateSessionResultBody, SessionInfo } from "@/types/shared";
 
 export const useCreateSession = () => {
-	const queryClient = useQueryClient();
-
 	return useMutation({
 		mutationFn: (totalParticipants: number) =>
 			apiFetch<SessionInfo>(
@@ -19,11 +17,6 @@ export const useCreateSession = () => {
 					body: JSON.stringify({ totalParticipants }),
 				},
 			),
-		onSuccess: () => {
-			queryClient.invalidateQueries({
-				queryKey: [QUERY_KEYS.GET_RESULTS, QUERY_KEYS.GET_SESSION],
-			});
-		},
 	});
 };
 
