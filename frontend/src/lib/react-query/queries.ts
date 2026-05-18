@@ -48,7 +48,7 @@ export const useCreateResults = () => {
 	});
 };
 
-export const useCheckSession = () => {
+export const useGetSessionStatus = (mode: "join" | "check") => {
 	const navigate = useNavigate();
 	const { toast } = useToast();
 
@@ -58,14 +58,18 @@ export const useCheckSession = () => {
 				`${import.meta.env.VITE_API_URL}/api/sessions/${sessionId}`,
 			),
 		onSuccess: data => {
-			if (!data.isActive) {
-				toast({
-					description: "Inactive session",
-					variant: "destructive",
-				});
-				return;
+			if (mode === "join") {
+				if (!data.isActive) {
+					toast({
+						description: "Inactive session",
+						variant: "destructive",
+					});
+					return;
+				}
+				navigate(`/questions/${data.uuid}`);
+			} else {
+				navigate(`/sessions/${data.uuid}/results`);
 			}
-			navigate(`/questions/${data.uuid}`);
 		},
 		onError: error => {
 			toast({
