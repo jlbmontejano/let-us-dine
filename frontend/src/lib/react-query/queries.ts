@@ -8,8 +8,6 @@ import { SessionResult } from "@/types/index";
 import { CreateSessionResultBody, SessionInfo } from "@/types/shared";
 
 export const useCreateSession = () => {
-	const queryClient = useQueryClient();
-
 	return useMutation({
 		mutationFn: (totalParticipants: number) =>
 			apiFetch<SessionInfo>(
@@ -19,11 +17,6 @@ export const useCreateSession = () => {
 					body: JSON.stringify({ totalParticipants }),
 				},
 			),
-		onSuccess: () => {
-			queryClient.invalidateQueries({
-				queryKey: [QUERY_KEYS.GET_RESULTS, QUERY_KEYS.GET_SESSION],
-			});
-		},
 	});
 };
 
@@ -55,7 +48,7 @@ export const useCreateResults = () => {
 	});
 };
 
-export const useCheckSession = () => {
+export const useGetSessionStatus = (mode: "join" | "check") => {
 	const navigate = useNavigate();
 	const { toast } = useToast();
 
@@ -65,14 +58,18 @@ export const useCheckSession = () => {
 				`${import.meta.env.VITE_API_URL}/api/sessions/${sessionId}`,
 			),
 		onSuccess: data => {
-			if (!data.isActive) {
-				toast({
-					description: "Inactive session",
-					variant: "destructive",
-				});
-				return;
+			if (mode === "join") {
+				if (!data.isActive) {
+					toast({
+						description: "Inactive session",
+						variant: "destructive",
+					});
+					return;
+				}
+				navigate(`/questions/${data.uuid}`);
+			} else {
+				navigate(`/sessions/${data.uuid}/results`);
 			}
-			navigate(`/questions/${data.uuid}`);
 		},
 		onError: error => {
 			toast({

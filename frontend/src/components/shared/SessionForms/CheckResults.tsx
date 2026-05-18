@@ -1,6 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -12,21 +11,23 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { checkSessionSchema } from "@/lib/zod-validation";
-import { CheckSessionValues } from "@/types";
+import { useGetSessionStatus } from "@/lib/react-query/queries";
+import { getSessionStatusSchema } from "@/lib/zod-validation";
+import { GetSessionStatusValues } from "@/types";
 
 const CheckResults = () => {
-	const navigate = useNavigate();
+	const { mutateAsync: getSessionStatus, isPending } =
+		useGetSessionStatus("check");
 
-	const form = useForm<CheckSessionValues>({
-		resolver: zodResolver(checkSessionSchema),
+	const form = useForm<GetSessionStatusValues>({
+		resolver: zodResolver(getSessionStatusSchema),
 		defaultValues: {
 			sessionId: "",
 		},
 	});
 
-	const onSubmit = (values: CheckSessionValues) => {
-		navigate(`/sessions/${values.sessionId}/results`);
+	const onSubmit = (values: GetSessionStatusValues) => {
+		getSessionStatus(values.sessionId);
 	};
 
 	return (
@@ -48,7 +49,10 @@ const CheckResults = () => {
 							</FormItem>
 						)}
 					/>
-					<Button type='submit' className='setup-form-btn'>
+					<Button
+						type='submit'
+						disabled={isPending}
+						className='setup-form-btn'>
 						Check
 					</Button>
 				</form>
