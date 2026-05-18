@@ -1,6 +1,9 @@
 import z from "zod";
 
-import { checkSessionSchema, createSessionSchema } from "@/lib/zod-validation";
+import {
+	createSessionSchema,
+	getSessionStatusSchema,
+} from "@/lib/zod-validation";
 import { GooglePlace, TopAnswer } from "@/types/shared";
 
 export type SessionType = "join" | "create" | "check" | "error" | null;
@@ -12,4 +15,4 @@ export type SessionResult = {
 
 export type CreateSessionValues = z.infer<typeof createSessionSchema>;
 
-export type CheckSessionValues = z.infer<typeof checkSessionSchema>;
+export type GetSessionStatusValues = z.infer<typeof getSessionStatusSchema>;
