@@ -11,22 +11,23 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useCheckSession } from "@/lib/react-query/queries";
-import { checkSessionSchema } from "@/lib/zod-validation";
-import { CheckSessionValues } from "@/types";
+import { useGetSessionStatus } from "@/lib/react-query/queries";
+import { getSessionStatusSchema } from "@/lib/zod-validation";
+import { GetSessionStatusValues } from "@/types";
 
 const JoinSession = () => {
-	const { mutateAsync: checkSession, isPending } = useCheckSession();
+	const { mutateAsync: getSessionStatus, isPending } =
+		useGetSessionStatus("join");
 
-	const form = useForm<CheckSessionValues>({
-		resolver: zodResolver(checkSessionSchema),
+	const form = useForm<GetSessionStatusValues>({
+		resolver: zodResolver(getSessionStatusSchema),
 		defaultValues: {
 			sessionId: "",
 		},
 	});
 
-	const onSubmit = (values: CheckSessionValues) => {
-		checkSession(values.sessionId);
+	const onSubmit = (values: GetSessionStatusValues) => {
+		getSessionStatus(values.sessionId);
 	};
 
 	return (
