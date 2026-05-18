@@ -9,7 +9,7 @@ export const createSessionSchema = z.object({
 		.lte(12, "Number must be between 2 and 12"),
 });
 
-export const checkSessionSchema = z.object({
+export const getSessionStatusSchema = z.object({
 	sessionId: z
 		.uuidv4("Invalid ID")
 		.min(1, { message: "A session ID is required." }),
